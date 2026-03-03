@@ -4,7 +4,7 @@ import Link from 'next/link'
 // import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { AuthGuard } from '@/features/auth'
-import { LayoutDashboard, Users, HandCoins } from 'lucide-react'
+import { LayoutDashboard, Users, HandCoins, CalendarClock } from 'lucide-react'
 import Image from "next/image";
 
 
@@ -12,6 +12,7 @@ const navItems = [
   { label: 'Painel Principal', href: '/dashboard', Icon: LayoutDashboard },
   { label: 'Clientes', href: '/customers', Icon: Users },
   { label: 'Empréstimos', href: '/loans', Icon: HandCoins },
+  { label: 'Vencimentos', href: '/due', Icon: CalendarClock },
 ]
 
 export default function PrivateLayout({

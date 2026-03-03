@@ -1,5 +1,6 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
+import { tokenService } from '@/shared/auth/tokenService'
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BE_URL,
@@ -16,5 +17,22 @@ api.interceptors.request.use((config) => {
 
     return config
 })
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const status = error?.response?.status
+
+    if (status === 401 || status === 403) {
+      tokenService.remove()
+
+      if (typeof window !== 'undefined' && window.location.pathname !== '/login') {
+        window.location.assign('/login')
+      }
+    }
+
+    return Promise.reject(error)
+  },
+)
 
 export { api }
