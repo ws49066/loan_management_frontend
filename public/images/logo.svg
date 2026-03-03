@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="900" height="250" viewBox="0 0 900 250" xmlns="http://www.w3.org/2000/svg">
+
+  <defs>
+    <!-- Gradientes -->
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#2ec4ff"/>
+      <stop offset="100%" stop-color="#0a57c9"/>
+    </linearGradient>
+
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#a8ff2e"/>
+      <stop offset="100%" stop-color="#1fae00"/>
+    </linearGradient>
+
+    <linearGradient id="circleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1c3d8f"/>
+      <stop offset="100%" stop-color="#0a1f4f"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Texto Tech -->
+  <text x="40" y="150"
+        font-family="Arial Black, sans-serif"
+        font-size="120"
+        fill="url(#blueGrad)"
+        letter-spacing="-3">
+    Tech
+  </text>
+
+  <!-- Texto Cred -->
+  <text x="320" y="150"
+        font-family="Arial Black, sans-serif"
+        font-size="120"
+        fill="url(#greenGrad)"
+        letter-spacing="-3">
+    Cred
+  </text>
+
+  <!-- Círculo -->
+  <circle cx="760" cy="115" r="75" fill="url(#circleGrad)" stroke="#2aff00" stroke-width="8"/>
+
+  <!-- Check -->
+  <polyline points="720,115 750,145 810,80"
+            fill="none"
+            stroke="#7fff00"
+            stroke-width="18"
+            stroke-linecap="round"
+            stroke-linejoin="round"/>
+
+</svg>

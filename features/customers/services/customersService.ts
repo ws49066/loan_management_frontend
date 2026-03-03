@@ -1,5 +1,5 @@
 import { api } from '@/shared/api/axios'
-import { customerListSchema } from '../schemas/customerSchema'
+import { customerListSchema, customerSchema } from '../schemas/customerSchema'
 import type { Customer } from '../types/customer'
 
 const CUSTOMERS_ENDPOINT = 'clients'
@@ -9,10 +9,31 @@ type UpdateCustomerPayload = {
   phone?: string | null
 }
 
+type CreateCustomerPayload = {
+  name: string
+  phone?: string | null
+}
+
 export async function fetchCustomers(): Promise<{ items: Customer[]; total: number }> {
   const { data } = await api.get(CUSTOMERS_ENDPOINT)
   const parsed = customerListSchema.parse(data)
   return { items: parsed.items, total: parsed.total }
+}
+
+export async function createCustomer(payload: CreateCustomerPayload): Promise<Customer> {
+  try {
+    const { data } = await api.post(CUSTOMERS_ENDPOINT, payload)
+    return customerSchema.parse(data)
+  } catch (err) {
+    if (err && typeof err === 'object' && 'response' in err) {
+      const response = (err as { response?: { data?: { message?: string; error?: string } } }).response
+      const message = response?.data?.message || response?.data?.error
+      if (message) {
+        throw new Error(message)
+      }
+    }
+    throw err
+  }
 }
 
 export async function updateCustomer(id: number, payload: UpdateCustomerPayload) {

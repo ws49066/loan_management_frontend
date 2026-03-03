@@ -1,7 +1,9 @@
 export type Loan = {
-  id: string
-  borrowerName: string
+  client_name: string
   amount: number
-  status: 'pending' | 'approved' | 'rejected' | 'paid'
-  createdAt: string
+  installments_count: number
+  installment_value: number
+  paid_installments: number
+  status: 'ACTIVE' | 'PAID' | 'PENDING' | 'REJECTED'
+  created_at: string
 }

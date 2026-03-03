@@ -12,7 +12,7 @@ type LoansState = {
   creating: boolean
   error: string | null
   load: () => Promise<void>
-  create: (payload: CreateLoanSchema) => Promise<void>
+  create: (payload: CreateLoanSchema) => Promise<boolean>
 }
 
 export const useLoansStore = create<LoansState>((set, get) => ({
@@ -37,9 +37,11 @@ export const useLoansStore = create<LoansState>((set, get) => ({
     try {
       await createLoan(payload)
       await get().load()
+      return true
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Falha ao criar empréstimo'
       set({ error: message })
+      return false
     } finally {
       set({ creating: false })
     }

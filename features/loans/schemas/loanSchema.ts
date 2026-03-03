@@ -1,11 +1,13 @@
 import { z } from 'zod'
 
 export const loanSchema = z.object({
-  id: z.string(),
-  borrowerName: z.string(),
-  amount: z.number(),
-  status: z.enum(['pending', 'approved', 'rejected', 'paid']),
-  createdAt: z.string(),
+  client_name: z.string(),
+  amount: z.coerce.number(),
+  installments_count: z.coerce.number(),
+  installment_value: z.coerce.number(),
+  paid_installments: z.coerce.number(),
+  status: z.enum(['ACTIVE', 'PAID', 'PENDING', 'REJECTED']),
+  created_at: z.string(),
 })
 
 export const loanListSchema = z.array(loanSchema)

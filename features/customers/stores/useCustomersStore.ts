@@ -1,16 +1,18 @@
 'use client'
 
 import { create } from 'zustand'
-import { fetchCustomers, updateCustomer } from '../services/customersService'
+import { createCustomer, fetchCustomers, updateCustomer } from '../services/customersService'
 import type { Customer } from '../types/customer'
 
 type CustomersState = {
   items: Customer[]
   total: number
   loading: boolean
+  creating: boolean
   savingId: number | null
   error: string | null
   load: () => Promise<void>
+  create: (payload: { name: string; phone?: string | null }) => Promise<boolean>
   update: (id: number, payload: { name: string; phone?: string | null }) => Promise<boolean>
 }
 
@@ -18,6 +20,7 @@ export const useCustomersStore = create<CustomersState>((set) => ({
   items: [],
   total: 0,
   loading: false,
+  creating: false,
   savingId: null,
   error: null,
   async load() {
@@ -30,6 +33,23 @@ export const useCustomersStore = create<CustomersState>((set) => ({
       set({ error: message })
     } finally {
       set({ loading: false })
+    }
+  },
+  async create(payload) {
+    set({ creating: true, error: null })
+    try {
+      const created = await createCustomer(payload)
+      set((state) => ({
+        items: [created, ...state.items],
+        total: state.total + 1,
+      }))
+      return true
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Falha ao cadastrar cliente'
+      set({ error: message })
+      return false
+    } finally {
+      set({ creating: false })
     }
   },
   async update(id, payload) {
