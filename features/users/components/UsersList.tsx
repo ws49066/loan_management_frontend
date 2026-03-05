@@ -23,6 +23,7 @@ export function UsersList() {
     useUsersStore()
   const [editingId, setEditingId] = useState<string | number | null>(null)
   const [draft, setDraft] = useState<Draft>({ name: '', email: '', role: 'OPERATOR' })
+  const [editPassword, setEditPassword] = useState('')
   const [isCreating, setIsCreating] = useState(false)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [createDraft, setCreateDraft] = useState<CreateDraft>({
@@ -61,11 +62,13 @@ export function UsersList() {
       email: user.email || '',
       role: (user.role as UserRole) || 'OPERATOR',
     })
+    setEditPassword('')
   }
 
   function cancelEdit() {
     setEditingId(null)
     setDraft({ name: '', email: '', role: 'OPERATOR' })
+    setEditPassword('')
   }
 
   function cancelCreate() {
@@ -75,11 +78,20 @@ export function UsersList() {
 
   async function saveEdit() {
     if (!editingUser) return
-    const payload = {
+    const payload: {
+      name: string
+      email: string
+      role: UserRole
+      is_active: boolean
+      password?: string
+    } = {
       name: draft.name.trim(),
       email: draft.email.trim(),
       role: draft.role,
       is_active: editingUser.is_active,
+    }
+    if (editPassword.trim()) {
+      payload.password = editPassword
     }
     const ok = await update(editingUser.id, payload)
     if (ok) {
@@ -292,22 +304,31 @@ export function UsersList() {
                   </td>
                   <td className="px-3 py-2">
                     {isEditing ? (
-                      <select
-                        value={draft.role}
-                        onChange={(event) =>
-                          setDraft((prev) => ({
-                            ...prev,
-                            role: event.target.value as UserRole,
-                          }))
-                        }
-                        className="h-9 w-full rounded-md border border-slate-300 px-2 text-slate-900"
-                      >
-                        {ROLE_OPTIONS.map((role) => (
-                          <option key={role} value={role}>
-                            {role}
-                          </option>
-                        ))}
-                      </select>
+                      <div className="grid gap-2">
+                        <select
+                          value={draft.role}
+                          onChange={(event) =>
+                            setDraft((prev) => ({
+                              ...prev,
+                              role: event.target.value as UserRole,
+                            }))
+                          }
+                          className="h-9 w-full rounded-md border border-slate-300 px-2 text-slate-900"
+                        >
+                          {ROLE_OPTIONS.map((role) => (
+                            <option key={role} value={role}>
+                              {role}
+                            </option>
+                          ))}
+                        </select>
+                        <input
+                          type="password"
+                          placeholder="Nova senha (opcional)"
+                          value={editPassword}
+                          onChange={(event) => setEditPassword(event.target.value)}
+                          className="h-9 w-full rounded-md border border-slate-300 px-2 text-slate-900"
+                        />
+                      </div>
                     ) : (
                       <span className="text-slate-700">{user.role || '-'}</span>
                     )}

@@ -1,4 +1,5 @@
 import { api } from '@/shared/api/axios'
+import { extractErrorMessage } from '@/shared/api/extractErrorMessage'
 import { userListSchema, userSchema } from '../schemas/userSchema'
 import type { User } from '../types/user'
 
@@ -17,6 +18,7 @@ type UpdateUserPayload = {
   email?: string
   role?: string | null
   is_active?: boolean
+  password?: string
 }
 
 const extractArray = (payload: unknown) => {
@@ -44,16 +46,24 @@ const extractTotal = (payload: unknown, itemsCount: number) => {
 export async function fetchUsers(
   params: { page?: number; size?: number } = {}
 ): Promise<{ items: User[]; total: number }> {
-  const { data } = await api.get(`${USERS_ENDPOINT}/`, {
-    params: {
-      page: params.page ?? 1,
-      size: params.size ?? 10,
-    },
-  })
-  const rawItems = extractArray(data)
-  const items = userListSchema.parse(rawItems)
-  const total = extractTotal(data, items.length)
-  return { items, total }
+  try {
+    const { data } = await api.get(`${USERS_ENDPOINT}/`, {
+      params: {
+        page: params.page ?? 1,
+        size: params.size ?? 10,
+      },
+    })
+    const rawItems = extractArray(data)
+    const items = userListSchema.parse(rawItems)
+    const total = extractTotal(data, items.length)
+    return { items, total }
+  } catch (err) {
+    const message = extractErrorMessage(err)
+    if (message) {
+      throw new Error(message)
+    }
+    throw err
+  }
 }
 
 export async function createUser(payload: CreateUserPayload): Promise<User> {
@@ -63,12 +73,9 @@ export async function createUser(payload: CreateUserPayload): Promise<User> {
     const candidate = record?.data ?? record?.user ?? record?.result ?? data
     return userSchema.parse(candidate)
   } catch (err) {
-    if (err && typeof err === 'object' && 'response' in err) {
-      const response = (err as { response?: { data?: { message?: string; error?: string } } }).response
-      const message = response?.data?.message || response?.data?.error
-      if (message) {
-        throw new Error(message)
-      }
+    const message = extractErrorMessage(err)
+    if (message) {
+      throw new Error(message)
     }
     throw err
   }
@@ -79,12 +86,9 @@ export async function updateUser(id: string | number, payload: UpdateUserPayload
     const { data } = await api.put(`${USERS_ENDPOINT}/${id}`, payload)
     return data
   } catch (err) {
-    if (err && typeof err === 'object' && 'response' in err) {
-      const response = (err as { response?: { data?: { message?: string; error?: string } } }).response
-      const message = response?.data?.message || response?.data?.error
-      if (message) {
-        throw new Error(message)
-      }
+    const message = extractErrorMessage(err)
+    if (message) {
+      throw new Error(message)
     }
     throw err
   }

@@ -21,7 +21,13 @@ type UsersState = {
   }) => Promise<boolean>
   update: (
     id: string | number,
-    payload: { name?: string | null; email?: string; role?: string | null; is_active?: boolean }
+    payload: {
+      name?: string | null
+      email?: string
+      role?: string | null
+      is_active?: boolean
+      password?: string
+    }
   ) => Promise<boolean>
 }
 
@@ -65,9 +71,10 @@ export const useUsersStore = create<UsersState>((set) => ({
     set({ savingId: id, error: null })
     try {
       await updateUser(id, payload)
+      const { password, ...safePayload } = payload
       set((state) => ({
         items: state.items.map((item) =>
-          item.id === id ? { ...item, ...payload } : item
+          item.id === id ? { ...item, ...safePayload } : item
         ),
       }))
       return true
