@@ -72,10 +72,6 @@ export function CustomersList() {
     return <p className="text-slate-600">Carregando clientes...</p>
   }
 
-  if (items.length === 0) {
-    return <p className="text-slate-600">Nenhum cliente encontrado.</p>
-  }
-
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -138,6 +134,9 @@ export function CustomersList() {
             </button>
           </div>
         </div>
+      )}
+      {items.length === 0 && (
+        <p className="text-sm text-slate-600">Nenhum cliente encontrado.</p>
       )}
       <div className="overflow-x-auto">
         <table className="w-full border border-slate-200 text-sm">
@@ -225,6 +224,13 @@ export function CustomersList() {
                 </tr>
               )
             })}
+            {items.length === 0 && (
+              <tr>
+                <td className="px-3 py-4 text-center text-slate-500" colSpan={3}>
+                  Nenhum cliente encontrado.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
