@@ -1,0 +1,26 @@
+{
+    "theme_color": "#F6F4F1",
+    "background_color": "#F6F4F1",
+    "icons": [
+        {
+            "purpose": "maskable",
+            "sizes": "512x512",
+            "src": "icon512_maskable.png",
+            "type": "image/png"
+        },
+        {
+            "purpose": "any",
+            "sizes": "512x512",
+            "src": "icon512_rounded.png",
+            "type": "image/png"
+        }
+    ],
+    "orientation": "portrait",
+    "display": "standalone",
+    "dir": "auto",
+    "lang": "en-US",
+    "name": "Group Agendamento",
+    "short_name": "group_agendamento",
+    "start_url": "/",
+    "scope": "/"
+}
