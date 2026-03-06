@@ -286,7 +286,105 @@ export function LoanDetails({ loanId }: LoanDetailsProps) {
 
       <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
         <h3 className="text-base font-semibold text-slate-900">Histórico de Parcelas</h3>
-        <div className="mt-4 overflow-x-auto">
+
+        <div className="mt-4 md:hidden space-y-3">
+          {installments.map((installment) => {
+            const installmentStatus = statusConfig[installment.status]
+            return (
+              <div
+                key={installment.id}
+                className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm"
+              >
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between gap-2">
+                    <div>
+                      <p className="text-xs font-semibold text-slate-500">Parcela</p>
+                      <p className="text-sm font-medium text-slate-900">
+                        {installment.installment}
+                      </p>
+                    </div>
+                    <span
+                      className={`inline-flex items-center gap-2 rounded-full border px-2.5 py-1 text-xs font-semibold ${
+                        installmentStatus
+                          ? installmentStatus.className
+                          : 'border-slate-200 bg-slate-50 text-slate-600'
+                      }`}
+                    >
+                      {installmentStatus ? installmentStatus.label : installment.status}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <p className="text-xs font-semibold text-slate-500">Vencimento</p>
+                      <p className="text-sm text-slate-700">
+                        {formatDate(installment.dueDate)}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-slate-500">Valor</p>
+                      <p className="text-sm text-slate-700">
+                        {formatCurrency(installment.amount)}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-slate-500">Informação</p>
+                      <p className="text-sm text-slate-600">
+                        {installment.info ||
+                          (installment.daysLate
+                            ? `${installment.daysLate} dias de atraso`
+                            : '-')}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-slate-500">Pagamento</p>
+                      <p className="text-sm text-slate-600">
+                        {formatDate(installment.paymentDate)}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {installment.status === 'PAID' ? (
+                      <span className="text-xs text-slate-400">-</span>
+                    ) : (
+                      <>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (!whatsappPhone) return
+                            window.open(
+                              `https://wa.me/${whatsappPhone}`,
+                              '_blank',
+                              'noopener,noreferrer',
+                            )
+                          }}
+                          disabled={!whatsappPhone}
+                          className="rounded-full bg-emerald-600 px-3 py-1 text-xs font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+                        >
+                          Cobrar
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            openPaymentModal({
+                              installmentId: installment.id,
+                              clientName: client.name,
+                              valor: installment.amount,
+                            })
+                          }
+                          className="rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white transition hover:bg-blue-700"
+                        >
+                          Receber
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+
+        <div className="mt-4 hidden md:block overflow-x-auto">
           <table className="w-full min-w-[720px] text-sm">
             <thead className="border-b border-slate-200 text-left text-xs text-slate-500">
               <tr>

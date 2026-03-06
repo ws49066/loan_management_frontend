@@ -7,8 +7,6 @@ export default function LoansPage() {
     <div className="mx-auto w-full max-w-5xl">
       <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-2">
-          <h2 className="text-xl font-semibold text-slate-900">Empréstimos</h2>
-          <p className="text-slate-600">Acompanhe todos os empréstimos do sistema.</p>
         </div>
         <Link
           href="/loans/new"

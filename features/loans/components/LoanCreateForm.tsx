@@ -1,9 +1,9 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { useForm, useWatch } from 'react-hook-form'
+import { useForm, useWatch, type Resolver } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { createLoanSchema, type CreateLoanSchema } from '../schemas/createLoanSchema'
+import { createLoanSchema, type CreateLoanSchema, type CreateLoanFormValues } from '../schemas/createLoanSchema'
 import { useLoansStore } from '../stores/useLoansStore'
 import { useCustomersStore } from '@/features/customers/stores/useCustomersStore'
 import { simulateLoan } from '../services/simulateLoanService'
@@ -105,14 +105,16 @@ export function LoanCreateForm() {
 
   const todayString = useMemo(() => new Date().toISOString().slice(0, 10), [])
 
+  const resolver: Resolver<CreateLoanFormValues> = zodResolver(createLoanSchema)
+
   const {
     register,
     handleSubmit,
     reset,
     control,
     formState: { errors },
-  } = useForm<CreateLoanSchema>({
-    resolver: zodResolver(createLoanSchema),
+  } = useForm<CreateLoanFormValues>({
+    resolver,
     defaultValues: {
       client_id: 0,
       amount: 0,
@@ -127,6 +129,10 @@ export function LoanCreateForm() {
     control,
     name: ['amount', 'interest_rate', 'installment_value', 'installments'],
   })
+  const amountValue = normalizeNumber(amount)
+  const interestRateValue = normalizeNumber(interestRate)
+  const installmentValueNumber = normalizeNumber(installmentValue)
+  const installmentsValue = Math.max(0, Math.round(normalizeNumber(installments)))
 
   useEffect(() => {
     if (customers.length === 0) {
@@ -135,8 +141,7 @@ export function LoanCreateForm() {
   }, [customers.length, loadCustomers])
 
   useEffect(() => {
-    const canSimulate =
-      Number.isFinite(amount) && amount > 0 && Number.isFinite(installments) && installments > 0
+    const canSimulate = amountValue > 0 && installmentsValue > 0
 
     if (!canSimulate) {
       setSummary(emptySummary)
@@ -149,13 +154,13 @@ export function LoanCreateForm() {
       setSimulationError(null)
 
       void simulateLoan({
-        amount,
-        interest_rate: Number.isFinite(interestRate) ? interestRate : 0,
-        installment_value: Number.isFinite(installmentValue) ? installmentValue : 0,
-        installments,
+        amount: amountValue,
+        interest_rate: interestRateValue,
+        installment_value: installmentValueNumber,
+        installments: installmentsValue,
       })
         .then((data) => {
-          setSummary(mapSimulationResponse(data, { amount, installments }))
+          setSummary(mapSimulationResponse(data, { amount: amountValue, installments: installmentsValue }))
         })
         .catch((err) => {
           const message = err instanceof Error ? err.message : 'Falha ao simular o empréstimo'
@@ -168,10 +173,11 @@ export function LoanCreateForm() {
     }, 400)
 
     return () => window.clearTimeout(timeout)
-  }, [amount, interestRate, installmentValue, installments])
+  }, [amountValue, interestRateValue, installmentValueNumber, installmentsValue])
 
-  function onSubmit(values: CreateLoanSchema) {
-    setPendingPayload(values)
+  function onSubmit(values: CreateLoanFormValues) {
+    const parsed = createLoanSchema.parse(values)
+    setPendingPayload(parsed)
     setShowConfirm(true)
   }
 

@@ -256,8 +256,142 @@ export function UsersList() {
       {items.length === 0 && (
         <p className="text-sm text-slate-600">Nenhum usuário encontrado.</p>
       )}
-      <div className="overflow-x-auto">
-        <table className="w-full border border-slate-200 text-sm">
+      <div className="md:hidden space-y-3">
+        {items.map((user) => {
+          const isEditing = user.id === editingId
+          const isSaving = user.id === savingId
+
+          return (
+            <div
+              key={user.id}
+              className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm"
+            >
+              <div className="space-y-3">
+                <div>
+                  <p className="text-xs font-semibold text-slate-500">Nome</p>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={draft.name}
+                      onChange={(event) =>
+                        setDraft((prev) => ({ ...prev, name: event.target.value }))
+                      }
+                      className="mt-1 h-9 w-full rounded-md border border-slate-300 px-2 text-slate-900"
+                    />
+                  ) : (
+                    <p className="text-sm font-medium text-slate-900">{user.name || '-'}</p>
+                  )}
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-slate-500">Email</p>
+                  {isEditing ? (
+                    <input
+                      type="email"
+                      value={draft.email}
+                      onChange={(event) =>
+                        setDraft((prev) => ({ ...prev, email: event.target.value }))
+                      }
+                      className="mt-1 h-9 w-full rounded-md border border-slate-300 px-2 text-slate-900"
+                    />
+                  ) : (
+                    <p className="text-sm text-slate-700">{user.email}</p>
+                  )}
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-slate-500">Perfil</p>
+                  {isEditing ? (
+                    <div className="mt-1 grid gap-2">
+                      <select
+                        value={draft.role}
+                        onChange={(event) =>
+                          setDraft((prev) => ({
+                            ...prev,
+                            role: event.target.value as UserRole,
+                          }))
+                        }
+                        className="h-9 w-full rounded-md border border-slate-300 px-2 text-slate-900"
+                      >
+                        {ROLE_OPTIONS.map((role) => (
+                          <option key={role} value={role}>
+                            {role}
+                          </option>
+                        ))}
+                      </select>
+                      <input
+                        type="password"
+                        placeholder="Nova senha (opcional)"
+                        value={editPassword}
+                        onChange={(event) => setEditPassword(event.target.value)}
+                        className="h-9 w-full rounded-md border border-slate-300 px-2 text-slate-900"
+                      />
+                    </div>
+                  ) : (
+                    <p className="text-sm text-slate-700">{user.role || '-'}</p>
+                  )}
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-slate-500">Status</p>
+                  <div className="mt-1 flex items-center gap-2">
+                    <button
+                      type="button"
+                      role="switch"
+                      aria-checked={user.is_active}
+                      onClick={() => toggleActive(user.id)}
+                      disabled={isSaving}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition ${
+                        user.is_active ? 'bg-emerald-500' : 'bg-slate-300'
+                      } ${isSaving ? 'opacity-60' : ''}`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
+                          user.is_active ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
+                    <span className="text-xs text-slate-600">
+                      {user.is_active ? 'Ativo' : 'Inativo'}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {isEditing ? (
+                    <>
+                      <button
+                        type="button"
+                        onClick={saveEdit}
+                        disabled={isSaving || !draft.name.trim() || !draft.email.trim()}
+                        className="rounded-md bg-slate-900 px-3 py-2 text-xs font-semibold text-white disabled:opacity-60"
+                      >
+                        {isSaving ? 'Salvando...' : 'Salvar'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={cancelEdit}
+                        className="rounded-md border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700"
+                      >
+                        Cancelar
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => startEdit(user.id)}
+                      className="inline-flex items-center gap-2 rounded-md border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-900"
+                      aria-label={`Editar ${user.name || user.email}`}
+                    >
+                      <Pencil className="h-4 w-4" />
+                      Editar
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+
+      <div className="hidden md:block overflow-x-auto">
+        <table className="w-full min-w-[760px] border border-slate-200 text-xs sm:text-sm">
           <thead className="bg-slate-100 text-slate-700">
             <tr>
               <th className="px-3 py-2 text-left">Nome</th>
@@ -354,9 +488,9 @@ export function UsersList() {
                       {user.is_active ? 'Ativo' : 'Inativo'}
                     </span>
                   </td>
-                  <td className="px-3 py-2">
+                  <td className="px-3 py-2 whitespace-nowrap">
                     {isEditing ? (
-                      <div className="flex gap-2">
+                      <div className="flex flex-wrap gap-2">
                         <button
                           type="button"
                           onClick={saveEdit}

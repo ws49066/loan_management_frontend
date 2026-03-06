@@ -1,6 +1,6 @@
 'use client'
 
-import { DashboardSummary } from '@/features/dashboard'
+import { DashboardSummary } from '@/features/dashboard/components/DashboardSummary'
 
 export default function DashboardPage() {
 

@@ -42,8 +42,10 @@ export function LoginForm() {
   }
 
   return (
-    <div className="w-full max-w-md bg-white border border-slate-200 rounded-md p-6 shadow-sm">
-      <h1 className="text-2xl font-semibold text-slate-900 text-center">Entre na sua conta</h1>
+    <div className="w-full bg-white border border-slate-200 rounded-md p-5 sm:p-6 shadow-sm">
+      <h1 className="text-xl sm:text-2xl font-semibold text-slate-900 text-center">
+        Entre na sua conta
+      </h1>
 
       <form onSubmit={handleSubmit(onSubmit)} className="mt-6 flex flex-col gap-4">
         <label className="flex flex-col gap-2 text-sm text-slate-700">

@@ -25,10 +25,6 @@ export default function UsersPage() {
 
   return (
     <div className="mx-auto w-full max-w-5xl">
-      <header className="flex flex-col gap-2">
-        <h2 className="text-xl font-semibold text-slate-900">Usuários</h2>
-        <p className="text-slate-600">Gerencie os usuários cadastrados.</p>
-      </header>
       <section className="mt-6 rounded-md bg-white p-4 shadow-sm">
         <UsersList />
       </section>

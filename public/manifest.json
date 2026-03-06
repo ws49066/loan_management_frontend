@@ -16,11 +16,11 @@
         }
     ],
     "orientation": "portrait",
-    "display": "standalone",
+    "display": "fullscreen",
     "dir": "auto",
-    "lang": "en-US",
-    "name": "Group Agendamento",
-    "short_name": "group_agendamento",
+    "lang": "pt-BR",
+    "name": "TechCred",
+    "short_name": "TechCred",
     "start_url": "/",
     "scope": "/"
 }

@@ -178,12 +178,6 @@ export function InstallmentsDueTable() {
 
   return (
     <div className="mx-auto w-full max-w-6xl">
-      <div className="flex flex-col gap-2">
-        <h2 className="text-xl font-semibold text-slate-900">Controle de Vencimentos</h2>
-        <p className="text-sm text-slate-500">
-          Visualize parcelas por status, filtre por cliente e priorize cobranças com mais atraso.
-        </p>
-      </div>
 
       <div className="mt-5 flex flex-wrap items-center gap-3">
         {statusTabs.map((tab) => {
@@ -211,7 +205,7 @@ export function InstallmentsDueTable() {
 
       <div className="mt-6 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
         <div className="flex flex-col gap-3">
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-col gap-3 lg:flex-row lg:flex-wrap lg:items-center">
             <input
               type="text"
               placeholder="Cliente ou telefone"
@@ -222,7 +216,7 @@ export function InstallmentsDueTable() {
               }}
               className="w-full min-w-[220px] flex-1 rounded-md border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
             />
-            <div className="flex items-center gap-2">
+            <div className="flex w-full items-center gap-2 sm:w-auto">
               <label className="text-xs font-medium text-slate-500">De</label>
               <input
                 type="date"
@@ -234,7 +228,7 @@ export function InstallmentsDueTable() {
                 className="rounded-md border border-slate-200 px-2 py-2 text-sm focus:border-blue-500 focus:outline-none"
               />
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex w-full items-center gap-2 sm:w-auto">
               <label className="text-xs font-medium text-slate-500">Ate</label>
               <input
                 type="date"
@@ -246,7 +240,7 @@ export function InstallmentsDueTable() {
                 className="rounded-md border border-slate-200 px-2 py-2 text-sm focus:border-blue-500 focus:outline-none"
               />
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
               <label className="text-xs font-medium text-slate-500">Ordenar</label>
               <select
                 value={orderBy}
@@ -299,7 +293,7 @@ export function InstallmentsDueTable() {
           </div>
         </div>
 
-        <div className="mt-4 overflow-x-auto">
+        <div className="mt-4 md:hidden space-y-3">
           {loading ? (
             <p className="py-6 text-center text-sm text-slate-500">Carregando vencimentos...</p>
           ) : error ? (
@@ -307,7 +301,89 @@ export function InstallmentsDueTable() {
           ) : items.length === 0 ? (
             <p className="py-6 text-center text-sm text-slate-500">Nenhuma parcela encontrada.</p>
           ) : (
-            <table className="w-full border border-slate-200 text-sm">
+            items.map((item) => (
+              <div
+                key={item.installmentId}
+                className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm"
+              >
+                <div className="space-y-2">
+                  <div>
+                    <p className="text-xs font-semibold text-slate-500">Cliente</p>
+                    <p className="text-sm font-medium text-slate-900">{item.clientName}</p>
+                    <p className="text-xs text-slate-500">{item.clientPhone || '-'}</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <p className="text-xs font-semibold text-slate-500">Parcela</p>
+                      <p className="text-sm text-slate-700">{item.parcela}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-slate-500">Valor</p>
+                      <p className="text-sm text-slate-700">{formatCurrency(item.valor)}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-slate-500">Vencimento</p>
+                      <p className="text-sm text-slate-700">{formatDate(item.vencimento)}</p>
+                      <p className="text-xs text-slate-500">{item.informacao || '-'}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-slate-500">Situação</p>
+                      <span
+                        className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
+                          statusStyles[item.status]?.className || 'bg-slate-100 text-slate-600'
+                        }`}
+                      >
+                        {statusStyles[item.status]?.label || item.status}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {item.status === 'PAID' ? (
+                      <span className="text-xs text-slate-400">-</span>
+                    ) : (
+                      <>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const phone = formatPhoneToWhatsApp(item.clientPhone)
+                            if (!phone) return
+                            window.open(`https://wa.me/${phone}`, '_blank', 'noopener,noreferrer')
+                          }}
+                          className="rounded-full bg-emerald-600 px-3 py-1 text-xs font-semibold text-white transition hover:bg-emerald-700"
+                        >
+                          Cobrar
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            openPaymentModal({
+                              installmentId: item.installmentId,
+                              clientName: item.clientName,
+                              valor: item.valor,
+                            })
+                          }
+                          className="rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white transition hover:bg-blue-700"
+                        >
+                          Receber
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        <div className="mt-4 hidden md:block overflow-x-auto">
+          {loading ? (
+            <p className="py-6 text-center text-sm text-slate-500">Carregando vencimentos...</p>
+          ) : error ? (
+            <p className="py-6 text-center text-sm text-red-600">{error}</p>
+          ) : items.length === 0 ? (
+            <p className="py-6 text-center text-sm text-slate-500">Nenhuma parcela encontrada.</p>
+          ) : (
+            <table className="w-full min-w-[880px] border border-slate-200 text-xs sm:text-sm">
               <thead className="bg-slate-100 text-slate-700">
                 <tr>
                   <th className="px-3 py-2 text-left">Cliente</th>
@@ -344,11 +420,11 @@ export function InstallmentsDueTable() {
                         {statusStyles[item.status]?.label || item.status}
                       </span>
                     </td>
-                    <td className="px-3 py-3">
+                    <td className="px-3 py-3 whitespace-nowrap">
                       {item.status === 'PAID' ? (
                         <span className="text-xs text-slate-400">-</span>
                       ) : (
-                        <div className="flex items-center gap-2">
+                        <div className="flex flex-wrap items-center gap-2">
                           <button
                             type="button"
                             onClick={() => {

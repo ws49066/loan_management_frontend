@@ -30,12 +30,70 @@ export function LoansList() {
   }
 
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full border border-slate-200 text-sm">
-        <thead className="bg-slate-100 text-slate-700">
-          <tr>
-            <th className="px-3 py-2 text-left">Cliente</th>
-            <th className="px-3 py-2 text-left">Valor</th>
+    <>
+      <div className="md:hidden space-y-3">
+        {items.map((loan) => (
+          <div
+            key={`${loan.client_name}-${loan.created_at}`}
+            className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm"
+          >
+            <div className="space-y-2">
+              <div>
+                <p className="text-xs font-semibold text-slate-500">Cliente</p>
+                <p className="text-sm font-medium text-slate-900">{loan.client_name}</p>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <p className="text-xs font-semibold text-slate-500">Valor</p>
+                  <p className="text-sm text-slate-900">
+                    {loan.amount.toLocaleString('pt-BR', {
+                      style: 'currency',
+                      currency: 'BRL',
+                    })}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-slate-500">Parcelas</p>
+                  <p className="text-sm text-slate-700">
+                    {loan.installments_count}x
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    {loan.installment_value.toLocaleString('pt-BR', {
+                      style: 'currency',
+                      currency: 'BRL',
+                    })}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-slate-500">Pagas</p>
+                  <p className="text-sm text-slate-700">
+                    {loan.paid_installments}/{loan.installments_count}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-slate-500">Status</p>
+                  <p className="text-sm text-slate-700">
+                    {statusLabels[loan.status] || loan.status}
+                  </p>
+                </div>
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-slate-500">Criado em</p>
+                <p className="text-sm text-slate-700">
+                  {new Date(loan.created_at).toLocaleDateString('pt-BR')}
+                </p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="hidden md:block overflow-x-auto">
+        <table className="w-full min-w-[720px] border border-slate-200 text-xs sm:text-sm">
+          <thead className="bg-slate-100 text-slate-700">
+            <tr>
+              <th className="px-3 py-2 text-left">Cliente</th>
+              <th className="px-3 py-2 text-left">Valor</th>
             <th className="px-3 py-2 text-left">Parcelas</th>
             <th className="px-3 py-2 text-left">Pagas</th>
             <th className="px-3 py-2 text-left">Status</th>
@@ -75,7 +133,8 @@ export function LoansList() {
             </tr>
           ))}
         </tbody>
-      </table>
-    </div>
+        </table>
+      </div>
+    </>
   )
 }
