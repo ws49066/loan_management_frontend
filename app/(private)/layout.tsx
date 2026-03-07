@@ -4,7 +4,7 @@ import Link from 'next/link'
 // import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
 import { AuthGuard, useAuthStore } from '@/features/auth'
-import { LayoutDashboard, Users, HandCoins, CalendarClock, User, Menu, X } from 'lucide-react'
+import { LayoutDashboard, Users, HandCoins, CalendarClock, User, Menu, X, Calculator } from 'lucide-react'
 import Image from "next/image";
 import { tokenService } from '@/shared/auth/tokenService'
 import { useState } from 'react'
@@ -16,6 +16,7 @@ const navItems = [
   { label: 'Painel Principal', description: "Resumo do negócio com indicadores, alertas e pendências.", href: '/dashboard', Icon: LayoutDashboard },
   { label: 'Clientes', description: "Cadastro e gestão completa dos clientes da carteira.", href: '/customers', Icon: Users },
   { label: 'Empréstimos', description: "Controle de contratos, parcelas, juros e histórico.", href: '/loans', Icon: HandCoins },
+  { label: 'Simular empréstimo', description: "Simule valores e prazos para compartilhar com o cliente.", href: '/loans/simulate', Icon: Calculator },
   { label: 'Vencimentos', description: "Calendário de cobranças, atrasos e próximos vencimentos.", href: '/due', Icon: CalendarClock },
   { label: 'Usuários', description: "Gestão de acessos, permissões e perfis administrativos.", href: '/users', Icon: User, adminOnly: true },
 ]
@@ -24,6 +25,10 @@ const pageMetaByPath: Record<string, { label: string; description?: string }> = 
   '/loans/new': {
     label: 'Novo empréstimo',
     description: 'Preencha os dados para registrar um novo empréstimo.',
+  },
+  '/loans/simulate': {
+    label: 'Simular empréstimo',
+    description: 'Monte uma simulação rápida para compartilhar com o cliente.',
   },
 }
 
