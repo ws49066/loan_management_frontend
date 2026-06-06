@@ -6,17 +6,17 @@ const optionalPositiveNumber = z.preprocess((value) => {
   }
   const parsed = typeof value === 'number' ? value : Number(value)
   return Number.isNaN(parsed) ? undefined : parsed
-}, z.number().positive('Informe um valor válido'))
+}, z.number().positive('Enter a valid amount'))
 
 export const simulateLoanProposalSchema = z.object({
-  amount: z.coerce.number().positive('Informe um valor válido'),
-  interest_rate: z.coerce.number().min(0, 'Informe uma taxa válida'),
+  amount: z.coerce.number().positive('Enter a valid amount'),
+  interest_rate: z.coerce.number().min(0, 'Enter a valid rate'),
   installment_value: optionalPositiveNumber.optional(),
-  installments: z.coerce.number().int().positive('Informe um número de parcelas válido'),
+  installments: z.coerce.number().int().positive('Enter a valid number of installments'),
   first_due_date: z
     .string()
-    .min(1, 'Informe a primeira parcela')
-    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Data inválida'),
+    .min(1, 'Enter the first due date')
+    .regex(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/, 'Invalid date'),
 })
 
 export type SimulateLoanProposalSchema = z.infer<typeof simulateLoanProposalSchema>

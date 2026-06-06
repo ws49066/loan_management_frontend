@@ -11,7 +11,7 @@ export default function SimulateLoanPage() {
           href="/loans"
           className="inline-flex h-11 items-center justify-center rounded-md border border-slate-300 px-4 text-sm font-semibold text-slate-700 transition hover:border-slate-400"
         >
-          Voltar
+          Back
         </Link>
       </header>
 

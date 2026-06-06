@@ -13,7 +13,7 @@ import {
 } from 'lucide-react'
 
 function formatCurrency(value: number) {
-  return value.toLocaleString('pt-BR', {
+  return value.toLocaleString('en-US', {
     style: 'currency',
     currency: 'BRL',
   })
@@ -27,7 +27,7 @@ export function DashboardSummary() {
   }, [load])
 
   if (loading) {
-    return <p className="text-slate-600">Carregando resumo...</p>
+    return <p className="text-slate-600">Loading summary...</p>
   }
 
   if (error) {
@@ -39,18 +39,18 @@ export function DashboardSummary() {
   }
 
   if (!summary) {
-    return <p className="text-slate-600">Sem dados para exibir.</p>
+    return <p className="text-slate-600">No data available.</p>
   }
 
   return (
     <div className="flex flex-col gap-6">
       <section>
-        <h3 className="text-base font-semibold text-slate-900">Visão Geral</h3>
+        <h3 className="text-base font-semibold text-slate-900">Overview</h3>
         <div className="mt-4 grid gap-4 lg:grid-cols-4">
           <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-500">Total Investido</p>
+                <p className="text-sm text-slate-500">Total Invested</p>
                 <p className="mt-1 text-lg font-semibold text-slate-900">
                   {formatCurrency(summary.totalInvested)}
                 </p>
@@ -63,7 +63,7 @@ export function DashboardSummary() {
           <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-500">Emprestado</p>
+                <p className="text-sm text-slate-500">Loaned</p>
                 <p className="mt-1 text-lg font-semibold text-slate-900">
                   {formatCurrency(summary.totalLoaned)}
                 </p>
@@ -76,7 +76,7 @@ export function DashboardSummary() {
           <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-500">Total Recebido</p>
+                <p className="text-sm text-slate-500">Total Received</p>
                 <p className="mt-1 text-lg font-semibold text-slate-900">
                   {formatCurrency(summary.totalReceived)}
                 </p>
@@ -89,7 +89,7 @@ export function DashboardSummary() {
           <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-500">Lucro</p>
+                <p className="text-sm text-slate-500">Profit</p>
                 <p className="mt-1 text-lg font-semibold text-slate-900">
                   {formatCurrency(summary.profit)}
                 </p>
@@ -115,11 +115,11 @@ export function DashboardSummary() {
               <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-red-200">
                 <AlertTriangle className="h-4 w-4" />
               </span>
-              <span className="font-medium">Pagamentos Atrasados</span>
+              <span className="font-medium">Overdue Payments</span>
             </div>
             <div className="mt-6 text-center">
               <p className="text-3xl font-semibold text-red-600">{summary.overdue.count}</p>
-              <p className="mt-1 text-sm text-slate-500">parcelas em atraso</p>
+              <p className="mt-1 text-sm text-slate-500">installments overdue</p>
               <p className="mt-3 text-lg font-semibold text-red-600">
                 {formatCurrency(summary.overdue.amount)}
               </p>
@@ -130,11 +130,11 @@ export function DashboardSummary() {
               <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-amber-200">
                 <CalendarClock className="h-4 w-4" />
               </span>
-              <span className="font-medium">Próximos Vencimentos</span>
+              <span className="font-medium">Upcoming Due Dates</span>
             </div>
             <div className="mt-6 text-center">
               <p className="text-3xl font-semibold text-amber-600">{summary.upcoming.count}</p>
-              <p className="mt-1 text-sm text-slate-500">próximos 7 dias</p>
+              <p className="mt-1 text-sm text-slate-500">next 7 days</p>
               <p className="mt-3 text-lg font-semibold text-amber-600">
                 {formatCurrency(summary.upcoming.amount)}
               </p>
@@ -145,11 +145,11 @@ export function DashboardSummary() {
               <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-blue-200">
                 <HandCoins className="h-4 w-4" />
               </span>
-              <span className="font-medium">Empréstimos Ativos</span>
+              <span className="font-medium">Active Loans</span>
             </div>
             <div className="mt-6 text-center">
               <p className="text-3xl font-semibold text-blue-600">{summary.activeLoans.count}</p>
-              <p className="mt-1 text-sm text-slate-500">contratos ativos</p>
+              <p className="mt-1 text-sm text-slate-500">active contracts</p>
               <p className="mt-3 text-lg font-semibold text-blue-600">
                 {formatCurrency(summary.activeLoans.amount)}
               </p>

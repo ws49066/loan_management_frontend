@@ -21,7 +21,7 @@ export const useCustomerSummaryStore = create<CustomerSummaryState>((set) => ({
       const summary = await fetchCustomerSummary(id)
       set({ summary })
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Falha ao carregar resumo do cliente'
+      const message = err instanceof Error ? err.message : 'Failed to load customer summary'
       set({ error: message })
     } finally {
       set({ loading: false })

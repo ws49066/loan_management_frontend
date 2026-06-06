@@ -21,7 +21,7 @@ export const useLoanDetailsStore = create<LoanDetailsState>((set) => ({
       const details = await fetchLoanDetails(id)
       set({ details })
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Falha ao carregar detalhes do empréstimo'
+      const message = err instanceof Error ? err.message : 'Failed to load loan details'
       set({ error: message })
     } finally {
       set({ loading: false })

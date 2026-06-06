@@ -4,7 +4,7 @@ export default function LoanDetailsPage({ params }: { params: { id: string } }) 
   const parsedId = Number(params.id)
 
   if (!Number.isFinite(parsedId)) {
-    return <p className="text-slate-600">Empréstimo inválido.</p>
+    return <p className="text-slate-600">Invalid loan.</p>
   }
 
   return (

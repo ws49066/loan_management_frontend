@@ -1,36 +1,97 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Loan Management Frontend
 
-## Getting Started
+Next.js frontend for the Loan Management project. This application communicates with the Loan Management API (backend) and provides a UI for managing clients, loans, installments, payments and the dashboard.
 
-First, run the development server:
+## Features
+
+- Authentication and session handling with tokens
+- Pages for customers, loans, payments, dashboard and users
+- Forms and input validation using Pydantic-compatible schemas on the backend
+- API integration with the backend running at `http://localhost:8000` by default
+
+## Tech Stack
+
+- Next.js (App Router)
+- TypeScript
+- Axios (HTTP client)
+- Tailwind / custom CSS (check `app/globals.css`)
+
+## Setup (Development)
+
+1. Install dependencies
+
+```bash
+npm install
+# or
+pnpm install
+```
+
+2. Configure environment variables
+
+Create a `.env.local` file at the project root if needed. Example variables used by this project (adjust as necessary):
+
+```
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api/v1
+```
+
+3. Run the development server
 
 ```bash
 npm run dev
 # or
-yarn dev
-# or
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000 in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Build & Production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Build the app:
 
-## Learn More
+```bash
+npm run build
+```
 
-To learn more about Next.js, take a look at the following resources:
+Start in production mode:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run start
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Environment & Backend Integration
 
-## Deploy on Vercel
+- The frontend expects the backend API at `NEXT_PUBLIC_API_BASE_URL` (default `http://localhost:8000/api/v1`).
+- Ensure the backend is running and CORS allows requests from `http://localhost:3000`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Tests
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+If there are frontend tests (Jest/Playwright), run them with:
+
+```bash
+npm test
+```
+
+(No UI tests are included by default; tell me if you want me to add basic end-to-end or unit tests.)
+
+## Deployment
+
+- Vercel is recommended for Next.js apps. Set environment variables in the Vercel dashboard.
+- You can also deploy as a static export if your app does not require server-side rendering.
+
+## Translating to English
+
+Currently some project strings or API examples might be in Portuguese. To fully convert the frontend to English I can:
+
+1. Scan `features/`, `app/(private)`, and `app/(public)` folders for Portuguese strings.
+2. Replace UI labels and form placeholders with English equivalents.
+3. Create a translation file structure (i18n) if you want multi-language support.
+
+Tell me if you want me to automatically apply these translations.
+
+## Adding This Project to Your Portfolio
+
+If you want a short portfolio blurb and screenshot suggestions, I can prepare a concise description and a step-by-step demo script you can use when presenting the project.
+
+## License
+
+This repository is currently private. Change this section if you open-source the project.

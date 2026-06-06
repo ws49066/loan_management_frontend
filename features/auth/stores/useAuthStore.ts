@@ -29,13 +29,13 @@ export const useAuthStore = create<AuthState>((set) => ({
       const data = await loginService(payload)
 
       if (!data.success || !data.data?.access_token) {
-        throw new Error(data.message || 'Falha ao realizar login')
+        throw new Error(data.message || 'Failed to perform login')
       }
 
       tokenService.set(data.data.access_token)
-      set({ successMessage: data.message || 'Login realizado com sucesso' })
+      set({ successMessage: data.message || 'Login successful' })
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Falha ao realizar login'
+      const message = err instanceof Error ? err.message : 'Failed to perform login'
       set({ error: message })
     } finally {
       set({ loading: false })

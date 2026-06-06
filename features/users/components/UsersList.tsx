@@ -96,7 +96,7 @@ export function UsersList() {
     const ok = await update(editingUser.id, payload)
     if (ok) {
       cancelEdit()
-      showSuccess('Usuário atualizado com sucesso.')
+      showSuccess('User updated successfully.')
     }
   }
 
@@ -114,7 +114,7 @@ export function UsersList() {
     if (ok) {
       setCreateDraft({ name: '', email: '', password: '', role: 'OPERATOR', is_active: true })
       setIsCreating(false)
-      showSuccess('Usuário cadastrado com sucesso.')
+      showSuccess('User created successfully.')
     }
   }
 
@@ -128,12 +128,12 @@ export function UsersList() {
       is_active: !user.is_active,
     })
     if (ok) {
-      showSuccess(`Usuário ${user.is_active ? 'desativado' : 'ativado'} com sucesso.`)
+      showSuccess(`User ${user.is_active ? 'deactivated' : 'activated'} successfully.`)
     }
   }
 
   if (loading) {
-    return <p className="text-slate-600">Carregando usuários...</p>
+    return <p className="text-slate-600">Loading users...</p>
   }
 
   return (
@@ -146,7 +146,7 @@ export function UsersList() {
           className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-blue-700"
         >
           <Plus className="h-4 w-4" />
-          Novo Usuário
+          New User
         </button>
       </div>
       {error && (
@@ -163,7 +163,7 @@ export function UsersList() {
         <div className="rounded-md border border-slate-200 bg-slate-50 p-4">
           <div className="grid gap-3 sm:grid-cols-2">
             <div>
-              <label className="text-xs font-semibold text-slate-600">Nome</label>
+              <label className="text-xs font-semibold text-slate-600">Name</label>
               <input
                 type="text"
                 value={createDraft.name}
@@ -185,7 +185,7 @@ export function UsersList() {
               />
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-600">Senha</label>
+              <label className="text-xs font-semibold text-slate-600">Password</label>
               <input
                 type="password"
                 value={createDraft.password}
@@ -196,7 +196,7 @@ export function UsersList() {
               />
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-600">Perfil</label>
+              <label className="text-xs font-semibold text-slate-600">Role</label>
               <select
                 value={createDraft.role}
                 onChange={(event) =>
@@ -225,7 +225,7 @@ export function UsersList() {
                 className="h-4 w-4 rounded border-slate-300"
               />
               <label htmlFor="create-is-active" className="text-xs font-semibold text-slate-600">
-                Usuário ativo
+                Active user
               </label>
             </div>
           </div>
@@ -241,20 +241,20 @@ export function UsersList() {
               }
               className="rounded-md bg-slate-900 px-3 py-2 text-xs font-semibold text-white disabled:opacity-60"
             >
-              {creating ? 'Salvando...' : 'Cadastrar'}
+              {creating ? 'Saving...' : 'Create'}
             </button>
             <button
               type="button"
               onClick={cancelCreate}
               className="rounded-md border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700"
             >
-              Cancelar
+                Cancel
             </button>
           </div>
         </div>
       )}
       {items.length === 0 && (
-        <p className="text-sm text-slate-600">Nenhum usuário encontrado.</p>
+        <p className="text-sm text-slate-600">No users found.</p>
       )}
       <div className="md:hidden space-y-3">
         {items.map((user) => {
@@ -268,7 +268,7 @@ export function UsersList() {
             >
               <div className="space-y-3">
                 <div>
-                  <p className="text-xs font-semibold text-slate-500">Nome</p>
+                  <p className="text-xs font-semibold text-slate-500">Name</p>
                   {isEditing ? (
                     <input
                       type="text"
@@ -298,7 +298,7 @@ export function UsersList() {
                   )}
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-slate-500">Perfil</p>
+                  <p className="text-xs font-semibold text-slate-500">Role</p>
                   {isEditing ? (
                     <div className="mt-1 grid gap-2">
                       <select
@@ -319,7 +319,7 @@ export function UsersList() {
                       </select>
                       <input
                         type="password"
-                        placeholder="Nova senha (opcional)"
+                        placeholder="New password (optional)"
                         value={editPassword}
                         onChange={(event) => setEditPassword(event.target.value)}
                         className="h-9 w-full rounded-md border border-slate-300 px-2 text-slate-900"
@@ -349,7 +349,7 @@ export function UsersList() {
                       />
                     </button>
                     <span className="text-xs text-slate-600">
-                      {user.is_active ? 'Ativo' : 'Inativo'}
+                      {user.is_active ? 'Active' : 'Inactive'}
                     </span>
                   </div>
                 </div>
@@ -362,14 +362,14 @@ export function UsersList() {
                         disabled={isSaving || !draft.name.trim() || !draft.email.trim()}
                         className="rounded-md bg-slate-900 px-3 py-2 text-xs font-semibold text-white disabled:opacity-60"
                       >
-                        {isSaving ? 'Salvando...' : 'Salvar'}
+                        {isSaving ? 'Saving...' : 'Save'}
                       </button>
                       <button
                         type="button"
                         onClick={cancelEdit}
                         className="rounded-md border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700"
                       >
-                        Cancelar
+                        Cancel
                       </button>
                     </>
                   ) : (
@@ -377,10 +377,10 @@ export function UsersList() {
                       type="button"
                       onClick={() => startEdit(user.id)}
                       className="inline-flex items-center gap-2 rounded-md border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-900"
-                      aria-label={`Editar ${user.name || user.email}`}
+                          aria-label={`Edit ${user.name || user.email}`}
                     >
                       <Pencil className="h-4 w-4" />
-                      Editar
+                          Edit
                     </button>
                   )}
                 </div>
@@ -394,11 +394,11 @@ export function UsersList() {
         <table className="w-full min-w-[760px] border border-slate-200 text-xs sm:text-sm">
           <thead className="bg-slate-100 text-slate-700">
             <tr>
-              <th className="px-3 py-2 text-left">Nome</th>
+              <th className="px-3 py-2 text-left">Name</th>
               <th className="px-3 py-2 text-left">Email</th>
-              <th className="px-3 py-2 text-left">Perfil</th>
+              <th className="px-3 py-2 text-left">Role</th>
               <th className="px-3 py-2 text-left">Status</th>
-              <th className="px-3 py-2 text-left">Ações</th>
+              <th className="px-3 py-2 text-left">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -457,7 +457,7 @@ export function UsersList() {
                         </select>
                         <input
                           type="password"
-                          placeholder="Nova senha (opcional)"
+                          placeholder="New password (optional)"
                           value={editPassword}
                           onChange={(event) => setEditPassword(event.target.value)}
                           className="h-9 w-full rounded-md border border-slate-300 px-2 text-slate-900"
@@ -485,7 +485,7 @@ export function UsersList() {
                       />
                     </button>
                     <span className="ml-2 text-xs text-slate-600">
-                      {user.is_active ? 'Ativo' : 'Inativo'}
+                      {user.is_active ? 'Active' : 'Inactive'}
                     </span>
                   </td>
                   <td className="px-3 py-2 whitespace-nowrap">
@@ -497,14 +497,14 @@ export function UsersList() {
                           disabled={isSaving || !draft.name.trim() || !draft.email.trim()}
                           className="rounded-md bg-slate-900 px-3 py-2 text-xs font-semibold text-white disabled:opacity-60"
                         >
-                          {isSaving ? 'Salvando...' : 'Salvar'}
+                          {isSaving ? 'Saving...' : 'Save'}
                         </button>
                         <button
                           type="button"
                           onClick={cancelEdit}
                           className="rounded-md border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700"
                         >
-                          Cancelar
+                          Cancel
                         </button>
                       </div>
                     ) : (
@@ -524,7 +524,7 @@ export function UsersList() {
             {items.length === 0 && (
               <tr>
                 <td className="px-3 py-4 text-center text-slate-500" colSpan={5}>
-                  Nenhum usuário encontrado.
+                      No users found.
                 </td>
               </tr>
             )}

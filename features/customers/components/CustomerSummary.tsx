@@ -11,32 +11,32 @@ type CustomerSummaryProps = {
 
 const statusConfig: Record<string, { label: string; className: string }> = {
   PAID: {
-    label: 'Pago',
+    label: 'Paid',
     className: 'border-emerald-200 bg-emerald-50 text-emerald-700',
   },
   ACTIVE: {
-    label: 'Ativo',
+    label: 'Active',
     className: 'border-blue-200 bg-blue-50 text-blue-700',
   },
   PENDING: {
-    label: 'Pendente',
+    label: 'Pending',
     className: 'border-amber-200 bg-amber-50 text-amber-700',
   },
   REJECTED: {
-    label: 'Rejeitado',
+    label: 'Rejected',
     className: 'border-rose-200 bg-rose-50 text-rose-700',
   },
 }
 
 function formatCurrency(value: number) {
-  return value.toLocaleString('pt-BR', {
+  return value.toLocaleString('en-US', {
     style: 'currency',
     currency: 'BRL',
   })
 }
 
 function formatPercent(value: number) {
-  return `${value.toLocaleString('pt-BR', { maximumFractionDigits: 2 })}%`
+  return `${value.toLocaleString('en-US', { maximumFractionDigits: 2 })}%`
 }
 
 function formatDate(value: string) {
@@ -44,7 +44,7 @@ function formatDate(value: string) {
   if (Number.isNaN(parsed.getTime())) {
     return value
   }
-  return parsed.toLocaleDateString('pt-BR')
+  return parsed.toLocaleDateString('en-US')
 }
 
 function clampProgress(value: number) {
@@ -65,7 +65,7 @@ export function CustomerSummary({ customerId }: CustomerSummaryProps) {
   }, [customerId, load])
 
   if (loading) {
-    return <p className="text-slate-600">Carregando detalhes do cliente...</p>
+    return <p className="text-slate-600">Loading customer details...</p>
   }
 
   if (error) {
@@ -77,7 +77,7 @@ export function CustomerSummary({ customerId }: CustomerSummaryProps) {
   }
 
   if (!summary) {
-    return <p className="text-slate-600">Nenhum detalhe disponível para este cliente.</p>
+    return <p className="text-slate-600">No customer details available.</p>
   }
 
   const { client } = summary
@@ -95,11 +95,11 @@ export function CustomerSummary({ customerId }: CustomerSummaryProps) {
               <div className="mt-1 flex flex-wrap items-center gap-3 text-sm text-slate-600">
                 <span className="inline-flex items-center gap-2">
                   <BadgeCheck className="h-4 w-4 text-blue-500" />
-                  Cliente #{client.id}
+                  Customer #{client.id}
                 </span>
                 <span className="inline-flex items-center gap-2">
                   <Phone className="h-4 w-4" />
-                  {client.phone || 'Telefone não informado'}
+                  {client.phone || 'Phone not provided'}
                 </span>
               </div>
             </div>
@@ -110,37 +110,37 @@ export function CustomerSummary({ customerId }: CustomerSummaryProps) {
       <section>
         <div className="grid gap-4 lg:grid-cols-4">
           <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-            <p className="text-sm text-slate-500">Total Emprestado</p>
+            <p className="text-sm text-slate-500">Total Loaned</p>
             <p className="mt-1 text-lg font-semibold text-slate-900">
               {formatCurrency(summary.totalLoaned)}
             </p>
           </div>
           <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-            <p className="text-sm text-slate-500">Total a Receber</p>
+            <p className="text-sm text-slate-500">Total to Receive</p>
             <p className="mt-1 text-lg font-semibold text-blue-600">
               {formatCurrency(summary.totalToReceive)}
             </p>
           </div>
           <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-            <p className="text-sm text-slate-500">Total Recebido</p>
+            <p className="text-sm text-slate-500">Total Received</p>
             <p className="mt-1 text-lg font-semibold text-emerald-600">
               {formatCurrency(summary.totalReceived)}
             </p>
           </div>
           <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-            <p className="text-sm text-slate-500">Empréstimos</p>
+            <p className="text-sm text-slate-500">Loans</p>
             <p className="mt-1 text-lg font-semibold text-slate-900">
               {summary.loansTotal}
             </p>
-            <p className="mt-1 text-sm text-slate-500">{summary.loansActive} ativos</p>
+            <p className="mt-1 text-sm text-slate-500">{summary.loansActive} active</p>
           </div>
         </div>
       </section>
 
       <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
         <div className="flex items-center justify-between">
-          <h4 className="text-base font-semibold text-slate-900">Histórico de Empréstimos</h4>
-          <span className="text-sm text-slate-500">{summary.history.length} registros</span>
+          <h4 className="text-base font-semibold text-slate-900">Loan History</h4>
+          <span className="text-sm text-slate-500">{summary.history.length} records</span>
         </div>
 
         <div className="mt-4 flex flex-col gap-4">
@@ -177,15 +177,15 @@ export function CustomerSummary({ customerId }: CustomerSummaryProps) {
                       {item.installmentsCount}x de {formatCurrency(installmentValue)}
                     </p>
                     <p className="text-sm text-slate-500">
-                      Iniciado em {formatDate(item.firstDueDate)}
+                      Started on {formatDate(item.firstDueDate)}
                     </p>
                   </div>
                   <div className="text-right">
                     <p className="text-sm text-slate-600">
-                      {item.installmentsPaid}/{item.installmentsCount} pagas
+                      {item.installmentsPaid}/{item.installmentsCount} paid
                     </p>
                     <p className="mt-1 text-xs text-slate-500">
-                      {formatPercent(progress)} concluído
+                      {formatPercent(progress)} completed
                     </p>
                   </div>
                 </div>

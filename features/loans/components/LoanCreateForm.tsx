@@ -24,11 +24,11 @@ const emptySummary: LoanSummary = {
 }
 
 function formatCurrency(value: number) {
-  return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+  return value.toLocaleString('en-US', { style: 'currency', currency: 'BRL' })
 }
 
 function formatPercent(value: number) {
-  return `${value.toLocaleString('pt-BR', {
+  return `${value.toLocaleString('en-US', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}%`
@@ -163,7 +163,7 @@ export function LoanCreateForm() {
           setSummary(mapSimulationResponse(data, { amount: amountValue, installments: installmentsValue }))
         })
         .catch((err) => {
-          const message = err instanceof Error ? err.message : 'Falha ao simular o empréstimo'
+          const message = err instanceof Error ? err.message : 'Failed to simulate loan'
           setSimulationError(message)
           setSummary(emptySummary)
         })
@@ -210,7 +210,7 @@ export function LoanCreateForm() {
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
         <div className="grid gap-4 md:grid-cols-2">
           <label className="flex flex-col gap-2 text-sm text-slate-700">
-            Cliente *
+            Client *
             <select
               {...register('client_id', { valueAsNumber: true })}
               disabled={customersLoading}
@@ -218,7 +218,7 @@ export function LoanCreateForm() {
                 errors.client_id ? 'border-red-500' : 'border-slate-300'
               }`}
             >
-              <option value={0}>Selecione...</option>
+              <option value={0}>Select...</option>
               {customers.map((customer) => (
                 <option key={customer.id} value={customer.id}>
                   {customer.name}
@@ -232,20 +232,20 @@ export function LoanCreateForm() {
           </label>
 
           <label className="flex flex-col gap-2 text-sm text-slate-700">
-            Valor do Empréstimo *
+            Loan Amount *
             <input
               type="number"
               step="0.01"
               min="0"
               {...register('amount', { valueAsNumber: true })}
               className="h-11 rounded-md border border-slate-300 px-3 text-slate-900 outline-none focus:border-slate-500"
-              placeholder="0,00"
+              placeholder="0.00"
             />
             {errors.amount && <span className="text-xs text-red-600">{errors.amount.message}</span>}
           </label>
 
           <label className="flex flex-col gap-2 text-sm text-slate-700">
-            Número de Parcelas *
+            Installments *
             <input
               type="number"
               min="1"
@@ -259,7 +259,7 @@ export function LoanCreateForm() {
           </label>
 
           <label className="flex flex-col gap-2 text-sm text-slate-700">
-            Taxa de Juros (%) *
+            Interest Rate (%) *
             <input
               type="number"
               step="0.01"
@@ -274,7 +274,7 @@ export function LoanCreateForm() {
           </label>
 
           <label className="flex flex-col gap-2 text-sm text-slate-700">
-            Primeira Parcela *
+            First Due Date *
             <input
               type="date"
               {...register('first_due_date')}
@@ -286,7 +286,7 @@ export function LoanCreateForm() {
           </label>
 
           <label className="flex flex-col gap-2 text-sm text-slate-700 md:col-span-2">
-            Valor da Parcela (opcional - deixe vazio para cálculo automático)
+            Installment Amount (optional - leave empty for automatic calculation)
             <input
               type="number"
               step="0.01"
@@ -295,7 +295,7 @@ export function LoanCreateForm() {
                 setValueAs: (value) => (value === '' ? undefined : Number(value)),
               })}
               className="h-11 rounded-md border border-slate-300 px-3 text-slate-900 outline-none focus:border-slate-500"
-              placeholder="Calculado automaticamente"
+              placeholder="Automatically calculated"
             />
             {errors.installment_value && (
               <span className="text-xs text-red-600">{errors.installment_value.message}</span>
@@ -305,31 +305,31 @@ export function LoanCreateForm() {
 
         <div className="rounded-md border border-blue-100 bg-blue-50 p-4">
           <div className="flex items-center justify-between">
-            <h4 className="text-sm font-semibold text-slate-800">Resumo do Empréstimo</h4>
-            {simulating && <span className="text-xs text-slate-500">Simulando...</span>}
+            <h4 className="text-sm font-semibold text-slate-800">Loan Summary</h4>
+            {simulating && <span className="text-xs text-slate-500">Simulating...</span>}
           </div>
           {simulationError && <p className="mt-2 text-xs text-red-600">{simulationError}</p>}
           <div className="mt-4 grid gap-4 md:grid-cols-2">
             <div className="space-y-1 text-sm text-slate-600">
-              <p>Valor da Parcela</p>
+              <p>Installment Amount</p>
               <p className="text-base font-semibold text-slate-900">
                 {formatCurrency(summary.installmentValue)}
               </p>
             </div>
             <div className="space-y-1 text-sm text-slate-600">
-              <p>Total a Receber</p>
+              <p>Total to Receive</p>
               <p className="text-base font-semibold text-slate-900">
                 {formatCurrency(summary.totalToReceive)}
               </p>
             </div>
             <div className="space-y-1 text-sm text-slate-600">
-              <p>Juros Total</p>
+              <p>Total Interest</p>
               <p className="text-base font-semibold text-emerald-600">
                 {formatCurrency(summary.totalInterest)}
               </p>
             </div>
             <div className="space-y-1 text-sm text-slate-600">
-              <p>Percentual de Juros</p>
+              <p>Interest Percentage</p>
               <p className="text-base font-semibold text-emerald-600">
                 {formatPercent(summary.interestPercent)}
               </p>
@@ -343,7 +343,7 @@ export function LoanCreateForm() {
             disabled={creating}
             className="h-11 rounded-md bg-blue-600 px-6 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:opacity-60"
           >
-            {creating ? 'Salvando...' : 'Criar Empréstimo'}
+            {creating ? 'Saving...' : 'Create Loan'}
           </button>
         </div>
 
@@ -353,9 +353,9 @@ export function LoanCreateForm() {
       {showConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-4">
           <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
-            <h4 className="text-lg font-semibold text-slate-900">Confirmar empréstimo</h4>
+            <h4 className="text-lg font-semibold text-slate-900">Confirm Loan</h4>
             <p className="mt-2 text-sm text-slate-600">
-              Deseja realmente realizar este empréstimo? Você pode cancelar para revisar os dados.
+              Do you want to create this loan? You can cancel to review the details.
             </p>
             <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:justify-end">
               <button
@@ -363,14 +363,14 @@ export function LoanCreateForm() {
                 onClick={handleCancelConfirm}
                 className="h-10 rounded-md border border-slate-300 px-4 text-sm font-semibold text-slate-700"
               >
-                Cancelar
+                Cancel
               </button>
               <button
                 type="button"
                 onClick={handleConfirmCreate}
                 className="h-10 rounded-md bg-blue-600 px-4 text-sm font-semibold text-white"
               >
-                Confirmar
+                Confirm
               </button>
             </div>
           </div>

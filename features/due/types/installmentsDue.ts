@@ -13,15 +13,15 @@ export type InstallmentDueItem = {
   clientId: number
   clientName: string
   clientPhone?: string | null
-  parcela: string
-  numero: number
-  totalParcelas: number
-  vencimento: string
-  valor: number
+  installmentLabel: string
+  installmentNumber: number
+  totalInstallments: number
+  dueDate: string
+  amount: number
   status: 'PENDING' | 'LATE' | 'PAID'
-  informacao?: string | null
-  diasAtraso?: number | null
-  pagamento?: string | null
+  info?: string | null
+  daysLate?: number | null
+  paymentDate?: string | null
 }
 
 export type InstallmentsDueResponse = {

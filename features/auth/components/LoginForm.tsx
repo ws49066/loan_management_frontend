@@ -44,7 +44,7 @@ export function LoginForm() {
   return (
     <div className="w-full bg-white border border-slate-200 rounded-md p-5 sm:p-6 shadow-sm">
       <h1 className="text-xl sm:text-2xl font-semibold text-slate-900 text-center">
-        Entre na sua conta
+        Sign in to your account
       </h1>
 
       <form onSubmit={handleSubmit(onSubmit)} className="mt-6 flex flex-col gap-4">
@@ -54,7 +54,7 @@ export function LoginForm() {
             type="email"
             {...register('email')}
             className="h-11 rounded-md border border-slate-300 px-3 text-slate-900 outline-none focus:border-slate-500"
-            placeholder="Insira seu e-mail"
+            placeholder="Enter your email"
             autoComplete="email"
           />
           {errors.email && (
@@ -68,7 +68,7 @@ export function LoginForm() {
             type="password"
             {...register('password')}
             className="h-11 rounded-md border border-slate-300 px-3 text-slate-900 outline-none focus:border-slate-500"
-            placeholder="Insira sua senha"
+            placeholder="Enter your password"
             autoComplete="current-password"
           />
           {errors.password && (
@@ -81,7 +81,7 @@ export function LoginForm() {
           disabled={loading}
           className="h-11 rounded-md bg-slate-900 text-white font-semibold disabled:opacity-60"
         >
-          {loading ? 'Entrando...' : 'Acessar Conta'}
+          {loading ? 'Signing in...' : 'Sign In'}
         </button>
 
         {error && <p className="text-sm text-red-600 text-center">{error}</p>}

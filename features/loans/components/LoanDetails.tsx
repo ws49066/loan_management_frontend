@@ -8,44 +8,44 @@ import { payInstallment } from '@/features/due'
 
 const statusConfig: Record<string, { label: string; className: string }> = {
   PAID: {
-    label: 'Pago',
+    label: 'Paid',
     className: 'border-emerald-200 bg-emerald-50 text-emerald-700',
   },
   ACTIVE: {
-    label: 'Ativo',
+    label: 'Active',
     className: 'border-blue-200 bg-blue-50 text-blue-700',
   },
   PENDING: {
-    label: 'Pendente',
+    label: 'Pending',
     className: 'border-amber-200 bg-amber-50 text-amber-700',
   },
   REJECTED: {
-    label: 'Rejeitado',
+    label: 'Rejected',
     className: 'border-rose-200 bg-rose-50 text-rose-700',
   },
   LATE: {
-    label: 'Atrasado',
+    label: 'Late',
     className: 'border-rose-200 bg-rose-50 text-rose-700',
   },
   OVERDUE: {
-    label: 'Atrasado',
+    label: 'Late',
     className: 'border-rose-200 bg-rose-50 text-rose-700',
   },
 }
 
 function formatCurrency(value: number) {
-  return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+  return value.toLocaleString('en-US', { style: 'currency', currency: 'BRL' })
 }
 
 function formatPercent(value: number) {
-  return `${value.toLocaleString('pt-BR', { maximumFractionDigits: 2 })}%`
+  return `${value.toLocaleString('en-US', { maximumFractionDigits: 2 })}%`
 }
 
 function formatDate(value: string | null) {
   if (!value) return '-'
   const parsed = new Date(value.includes('T') ? value : `${value}T00:00:00`)
   if (Number.isNaN(parsed.getTime())) return value
-  return parsed.toLocaleDateString('pt-BR')
+  return parsed.toLocaleDateString('en-US')
 }
 
 function clampProgress(value: number) {
@@ -104,7 +104,7 @@ export function LoanDetails({ loanId }: LoanDetailsProps) {
   const isFinalAmountValid = finalAmount >= 0
 
   if (loading) {
-    return <p className="text-slate-600">Carregando detalhes do empréstimo...</p>
+    return <p className="text-slate-600">Loading loan details...</p>
   }
 
   if (error) {
@@ -116,7 +116,7 @@ export function LoanDetails({ loanId }: LoanDetailsProps) {
   }
 
   if (!details) {
-    return <p className="text-slate-600">Nenhum detalhe disponível para este empréstimo.</p>
+    return <p className="text-slate-600">No details available for this loan.</p>
   }
 
   const { loan, client, installments } = details
@@ -124,11 +124,11 @@ export function LoanDetails({ loanId }: LoanDetailsProps) {
   const status = statusConfig[loan.status]
   const whatsappPhone = formatPhoneToWhatsApp(client.phone)
 
-  function openPaymentModal(item: { installmentId: number; clientName: string; valor: number }) {
+  function openPaymentModal(item: { installmentId: number; clientName: string; amount: number }) {
     setSelectedInstallmentId(item.installmentId)
     setSelectedClientName(item.clientName)
-    setSelectedOriginalValue(item.valor)
-    setReceivedAmount(item.valor.toString())
+    setSelectedOriginalValue(item.amount)
+    setReceivedAmount(item.amount.toString())
     setDiscount('0')
     setExtra('0')
     setPayError(null)
@@ -145,11 +145,11 @@ export function LoanDetails({ loanId }: LoanDetailsProps) {
 
   function handleOpenConfirm() {
     if (!receivedValueNumber) {
-      setPayError('Informe o valor recebido para confirmar o pagamento.')
+      setPayError('Enter the received amount to confirm payment.')
       return
     }
     if (!isFinalAmountValid) {
-      setPayError('O valor final não pode ser negativo.')
+      setPayError('The final amount cannot be negative.')
       return
     }
 
@@ -171,7 +171,7 @@ export function LoanDetails({ loanId }: LoanDetailsProps) {
       closePaymentModal()
       void load(loanId)
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Falha ao registrar pagamento.'
+      const message = err instanceof Error ? err.message : 'Failed to register payment.'
       setPayError(message)
     } finally {
       setPayLoading(false)
@@ -187,17 +187,17 @@ export function LoanDetails({ loanId }: LoanDetailsProps) {
           className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 transition hover:text-blue-700"
         >
           <ArrowLeft className="h-4 w-4" />
-          Voltar
+          Back
         </button>
       </header>
 
       <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <h2 className="text-lg font-semibold text-slate-900">Detalhes do Empréstimo</h2>
-            <p className="mt-1 text-sm text-slate-600">Cliente: {client.name}</p>
+            <h2 className="text-lg font-semibold text-slate-900">Loan Details</h2>
+            <p className="mt-1 text-sm text-slate-600">Client: {client.name}</p>
             <p className="text-sm text-slate-500">
-              Telefone: {client.phone || 'Não informado'}
+              Phone: {client.phone || 'Not provided'}
             </p>
           </div>
           <span
@@ -211,44 +211,44 @@ export function LoanDetails({ loanId }: LoanDetailsProps) {
 
         <div className="mt-4 grid gap-4 lg:grid-cols-4">
           <div>
-            <p className="text-xs text-slate-500">Valor Emprestado</p>
+            <p className="text-xs text-slate-500">Loan Amount</p>
             <p className="text-sm font-semibold text-slate-900">{formatCurrency(loan.amount)}</p>
           </div>
           <div>
-            <p className="text-xs text-slate-500">Total com Juros</p>
+            <p className="text-xs text-slate-500">Total With Interest</p>
             <p className="text-sm font-semibold text-blue-600">
               {formatCurrency(loan.totalWithInterest)}
             </p>
           </div>
           <div>
-            <p className="text-xs text-slate-500">Juros Total</p>
+            <p className="text-xs text-slate-500">Total Interest</p>
             <p className="text-sm font-semibold text-emerald-600">
               {formatCurrency(loan.totalInterest)}
             </p>
           </div>
           <div>
-            <p className="text-xs text-slate-500">Taxa de Juros</p>
+            <p className="text-xs text-slate-500">Interest Rate</p>
             <p className="text-sm font-semibold text-slate-900">{formatPercent(loan.interestRate)}</p>
           </div>
         </div>
 
         <div className="mt-4 grid gap-4 lg:grid-cols-4">
           <div>
-            <p className="text-xs text-slate-500">Total Pago</p>
+            <p className="text-xs text-slate-500">Total Paid</p>
             <p className="text-sm font-semibold text-emerald-600">{formatCurrency(loan.totalPaid)}</p>
           </div>
           <div>
-            <p className="text-xs text-slate-500">Total Pendente</p>
+            <p className="text-xs text-slate-500">Total Pending</p>
             <p className="text-sm font-semibold text-amber-600">{formatCurrency(loan.totalPending)}</p>
           </div>
           <div>
-            <p className="text-xs text-slate-500">Parcelas Pagas</p>
+            <p className="text-xs text-slate-500">Installments Paid</p>
             <p className="text-sm font-semibold text-slate-900">
               {loan.installmentsPaid}/{loan.installmentsCount}
             </p>
           </div>
           <div>
-            <p className="text-xs text-slate-500">Progresso</p>
+            <p className="text-xs text-slate-500">Progress</p>
             <p className="text-sm font-semibold text-slate-900">{formatPercent(progress)}</p>
           </div>
         </div>
@@ -261,22 +261,22 @@ export function LoanDetails({ loanId }: LoanDetailsProps) {
       </section>
 
       <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-        <h3 className="text-base font-semibold text-slate-900">Informações do Empréstimo</h3>
+        <h3 className="text-base font-semibold text-slate-900">Loan Information</h3>
         <div className="mt-4 grid gap-4 md:grid-cols-2">
           <div>
-            <p className="text-xs text-slate-500">Data do Empréstimo</p>
+            <p className="text-xs text-slate-500">Loan Date</p>
             <p className="text-sm font-semibold text-slate-900">{formatDate(loan.loanDate)}</p>
           </div>
           <div>
-            <p className="text-xs text-slate-500">Primeiro Vencimento</p>
+            <p className="text-xs text-slate-500">First Due Date</p>
             <p className="text-sm font-semibold text-slate-900">{formatDate(loan.firstDueDate)}</p>
           </div>
           <div>
-            <p className="text-xs text-slate-500">Número de Parcelas</p>
+            <p className="text-xs text-slate-500">Installment Count</p>
             <p className="text-sm font-semibold text-slate-900">{loan.installmentsCount}x</p>
           </div>
           <div>
-            <p className="text-xs text-slate-500">Valor da Parcela</p>
+            <p className="text-xs text-slate-500">Installment Amount</p>
             <p className="text-sm font-semibold text-slate-900">
               {formatCurrency(loan.installmentValue)}
             </p>
@@ -285,7 +285,7 @@ export function LoanDetails({ loanId }: LoanDetailsProps) {
       </section>
 
       <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-        <h3 className="text-base font-semibold text-slate-900">Histórico de Parcelas</h3>
+        <h3 className="text-base font-semibold text-slate-900">Installment History</h3>
 
         <div className="mt-4 md:hidden space-y-3">
           {installments.map((installment) => {
@@ -298,7 +298,7 @@ export function LoanDetails({ loanId }: LoanDetailsProps) {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between gap-2">
                     <div>
-                      <p className="text-xs font-semibold text-slate-500">Parcela</p>
+                      <p className="text-xs font-semibold text-slate-500">Installment</p>
                       <p className="text-sm font-medium text-slate-900">
                         {installment.installment}
                       </p>
@@ -315,19 +315,19 @@ export function LoanDetails({ loanId }: LoanDetailsProps) {
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <p className="text-xs font-semibold text-slate-500">Vencimento</p>
+                      <p className="text-xs font-semibold text-slate-500">Due Date</p>
                       <p className="text-sm text-slate-700">
                         {formatDate(installment.dueDate)}
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs font-semibold text-slate-500">Valor</p>
+                      <p className="text-xs font-semibold text-slate-500">Amount</p>
                       <p className="text-sm text-slate-700">
                         {formatCurrency(installment.amount)}
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs font-semibold text-slate-500">Informação</p>
+                      <p className="text-xs font-semibold text-slate-500">Info</p>
                       <p className="text-sm text-slate-600">
                         {installment.info ||
                           (installment.daysLate
@@ -336,7 +336,7 @@ export function LoanDetails({ loanId }: LoanDetailsProps) {
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs font-semibold text-slate-500">Pagamento</p>
+                      <p className="text-xs font-semibold text-slate-500">Payment</p>
                       <p className="text-sm text-slate-600">
                         {formatDate(installment.paymentDate)}
                       </p>
@@ -360,7 +360,7 @@ export function LoanDetails({ loanId }: LoanDetailsProps) {
                           disabled={!whatsappPhone}
                           className="rounded-full bg-emerald-600 px-3 py-1 text-xs font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
                         >
-                          Cobrar
+                          Request Payment
                         </button>
                         <button
                           type="button"
@@ -368,12 +368,12 @@ export function LoanDetails({ loanId }: LoanDetailsProps) {
                             openPaymentModal({
                               installmentId: installment.id,
                               clientName: client.name,
-                              valor: installment.amount,
+                              amount: installment.amount,
                             })
                           }
                           className="rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white transition hover:bg-blue-700"
                         >
-                          Receber
+                          Receive Payment
                         </button>
                       </>
                     )}
@@ -388,13 +388,13 @@ export function LoanDetails({ loanId }: LoanDetailsProps) {
           <table className="w-full min-w-[720px] text-sm">
             <thead className="border-b border-slate-200 text-left text-xs text-slate-500">
               <tr>
-                <th className="pb-2">Parcela</th>
-                <th className="pb-2">Vencimento</th>
-                <th className="pb-2">Valor</th>
+                <th className="pb-2">Installment</th>
+                <th className="pb-2">Due Date</th>
+                <th className="pb-2">Amount</th>
                 <th className="pb-2">Status</th>
-                <th className="pb-2">Informação</th>
-                <th className="pb-2">Pagamento</th>
-                <th className="pb-2">Ações</th>
+                <th className="pb-2">Info</th>
+                <th className="pb-2">Payment</th>
+                <th className="pb-2">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -443,7 +443,7 @@ export function LoanDetails({ loanId }: LoanDetailsProps) {
                             disabled={!whatsappPhone}
                             className="rounded-full bg-emerald-600 px-3 py-1 text-xs font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
                           >
-                            Cobrar
+                            Request Payment
                           </button>
                           <button
                             type="button"
@@ -451,12 +451,12 @@ export function LoanDetails({ loanId }: LoanDetailsProps) {
                               openPaymentModal({
                                 installmentId: installment.id,
                                 clientName: client.name,
-                                valor: installment.amount,
+                                amount: installment.amount,
                               })
                             }
                             className="rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white transition hover:bg-blue-700"
                           >
-                            Receber
+                            Receive Payment
                           </button>
                         </div>
                       )}
@@ -474,8 +474,8 @@ export function LoanDetails({ loanId }: LoanDetailsProps) {
           <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h3 className="text-lg font-semibold text-slate-900">Registrar Pagamento</h3>
-                <p className="text-sm text-slate-500">Confirme os valores antes de finalizar.</p>
+                <h3 className="text-lg font-semibold text-slate-900">Record Payment</h3>
+                <p className="text-sm text-slate-500">Confirm the values before submitting.</p>
               </div>
               <button
                 type="button"
@@ -488,16 +488,16 @@ export function LoanDetails({ loanId }: LoanDetailsProps) {
 
             <div className="mt-4 space-y-4 text-sm text-slate-700">
               <div>
-                <p className="text-xs font-semibold uppercase text-slate-400">Cliente</p>
+                <p className="text-xs font-semibold uppercase text-slate-400">Client</p>
                 <p className="font-medium text-slate-900">{selectedClientName}</p>
               </div>
               <div>
-                <p className="text-xs font-semibold uppercase text-slate-400">Valor Original da Parcela</p>
+                <p className="text-xs font-semibold uppercase text-slate-400">Original Installment Amount</p>
                 <p className="font-medium text-slate-900">{formatCurrency(selectedOriginalValue)}</p>
               </div>
 
               <div className="grid gap-3">
-                <label className="text-xs font-medium text-slate-500">Valor Recebido</label>
+                <label className="text-xs font-medium text-slate-500">Received Amount</label>
                 <input
                   type="number"
                   step="0.01"
@@ -509,7 +509,7 @@ export function LoanDetails({ loanId }: LoanDetailsProps) {
               </div>
 
               <div className="grid gap-3">
-                <label className="text-xs font-medium text-slate-500">Desconto</label>
+                <label className="text-xs font-medium text-slate-500">Discount</label>
                 <input
                   type="number"
                   step="0.01"
@@ -521,7 +521,7 @@ export function LoanDetails({ loanId }: LoanDetailsProps) {
               </div>
 
               <div className="grid gap-3">
-                <label className="text-xs font-medium text-slate-500">Acréscimo (juros/multa)</label>
+                <label className="text-xs font-medium text-slate-500">Extra (interest/penalty)</label>
                 <input
                   type="number"
                   step="0.01"
@@ -540,17 +540,17 @@ export function LoanDetails({ loanId }: LoanDetailsProps) {
                 }`}
               >
                 <div className="flex justify-between">
-                  <span>Valor recebido:</span>
+                  <span>Received amount:</span>
                   <span className="font-semibold text-slate-900">
                     {formatCurrency(receivedValueNumber)}
                   </span>
                 </div>
                 <div className="mt-1 flex justify-between">
-                  <span>Valor final:</span>
+                  <span>Final amount:</span>
                   <span className="font-semibold text-slate-900">{formatCurrency(finalAmount)}</span>
                 </div>
                 {!isFinalAmountValid ? (
-                  <p className="mt-2 text-xs font-medium">O valor final não pode ser negativo.</p>
+                  <p className="mt-2 text-xs font-medium">The final amount cannot be negative.</p>
                 ) : null}
               </div>
 
@@ -563,7 +563,7 @@ export function LoanDetails({ loanId }: LoanDetailsProps) {
                 onClick={closePaymentModal}
                 className="h-10 rounded-md border border-slate-300 px-4 text-sm font-semibold text-slate-700"
               >
-                Cancelar
+                Cancel
               </button>
               <button
                 type="button"
@@ -571,7 +571,7 @@ export function LoanDetails({ loanId }: LoanDetailsProps) {
                 disabled={!receivedValueNumber || payLoading || !isFinalAmountValid}
                 className="h-10 rounded-md bg-blue-600 px-4 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {payLoading ? 'Confirmando...' : 'Confirmar Pagamento'}
+                {payLoading ? 'Confirming...' : 'Confirm Payment'}
               </button>
             </div>
           </div>
@@ -581,15 +581,15 @@ export function LoanDetails({ loanId }: LoanDetailsProps) {
       {showConfirmPay ? (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/40 px-4">
           <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
-            <h4 className="text-lg font-semibold text-slate-900">Confirmar pagamento</h4>
+            <h4 className="text-lg font-semibold text-slate-900">Confirm Payment</h4>
             <p className="mt-2 text-sm text-slate-600">
-              Deseja confirmar o pagamento de {selectedClientName}?
+              Do you want to confirm the payment for {selectedClientName}?
             </p>
             <div className="mt-4 space-y-1 text-sm text-slate-600">
-              <p>Valor recebido: {formatCurrency(receivedValueNumber)}</p>
-              <p>Desconto: {formatCurrency(discountNumber)}</p>
-              <p>Acréscimo: {formatCurrency(extraNumber)}</p>
-              <p className="font-semibold text-slate-900">Valor final: {formatCurrency(finalAmount)}</p>
+              <p>Received amount: {formatCurrency(receivedValueNumber)}</p>
+              <p>Discount: {formatCurrency(discountNumber)}</p>
+              <p>Extra: {formatCurrency(extraNumber)}</p>
+              <p className="font-semibold text-slate-900">Final amount: {formatCurrency(finalAmount)}</p>
             </div>
             <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:justify-end">
               <button
@@ -597,7 +597,7 @@ export function LoanDetails({ loanId }: LoanDetailsProps) {
                 onClick={() => setShowConfirmPay(false)}
                 className="h-10 rounded-md border border-slate-300 px-4 text-sm font-semibold text-slate-700"
               >
-                Cancelar
+                Cancel
               </button>
               <button
                 type="button"
@@ -605,7 +605,7 @@ export function LoanDetails({ loanId }: LoanDetailsProps) {
                 disabled={payLoading}
                 className="h-10 rounded-md bg-blue-600 px-4 text-sm font-semibold text-white disabled:opacity-60"
               >
-                {payLoading ? 'Confirmando...' : 'Confirmar'}
+                {payLoading ? 'Confirming...' : 'Confirm'}
               </button>
             </div>
           </div>

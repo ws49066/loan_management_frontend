@@ -13,6 +13,7 @@ type Draft = {
 export function CustomersList() {
   const { items, total, loading, error, load, update, create, savingId, creating } =
     useCustomersStore()
+
   const [editingId, setEditingId] = useState<number | null>(null)
   const [draft, setDraft] = useState<Draft>({ name: '', phone: '' })
   const [isCreating, setIsCreating] = useState(false)
@@ -22,12 +23,7 @@ export function CustomersList() {
     void load()
   }, [load])
 
-  const editingCustomer = useMemo(
-    () => items.find((item) => item.id === editingId) || null,
-    [items, editingId]
-  )
-
-  function startEdit(id: number) {
+  const startEdit = (id: number) => {
     const customer = items.find((item) => item.id === id)
     if (!customer) return
     setEditingId(id)
@@ -39,20 +35,13 @@ export function CustomersList() {
     setDraft({ name: '', phone: '' })
   }
 
-  function cancelCreate() {
-    setIsCreating(false)
-    setCreateDraft({ name: '', phone: '' })
-  }
-
   async function saveEdit() {
-    if (!editingCustomer) return
-    const ok = await update(editingCustomer.id, {
+    if (editingId == null) return
+    await update(editingId, {
       name: draft.name.trim(),
       phone: draft.phone.trim() ? draft.phone.trim() : null,
     })
-    if (ok) {
-      cancelEdit()
-    }
+    cancelEdit()
   }
 
   async function saveCreate() {
@@ -68,10 +57,6 @@ export function CustomersList() {
     }
   }
 
-  if (loading) {
-    return <p className="text-slate-600">Carregando clientes...</p>
-  }
-
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -82,36 +67,34 @@ export function CustomersList() {
           className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-blue-700"
         >
           <Plus className="h-4 w-4" />
-          Novo Cliente
+          New Customer
         </button>
       </div>
+
       {error && (
         <div className="mb-3 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
           {error}
         </div>
       )}
+
       {isCreating && (
         <div className="rounded-md border border-slate-200 bg-slate-50 p-4">
           <div className="grid gap-3 sm:grid-cols-3">
             <div className="sm:col-span-2">
-              <label className="text-xs font-semibold text-slate-600">Nome</label>
+              <label className="text-xs font-semibold text-slate-600">Name</label>
               <input
                 type="text"
                 value={createDraft.name}
-                onChange={(event) =>
-                  setCreateDraft((prev) => ({ ...prev, name: event.target.value }))
-                }
+                onChange={(event) => setCreateDraft((prev) => ({ ...prev, name: event.target.value }))}
                 className="mt-1 h-9 w-full rounded-md border border-slate-300 px-2 text-slate-900"
               />
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-600">Telefone</label>
+              <label className="text-xs font-semibold text-slate-600">Phone</label>
               <input
                 type="text"
                 value={createDraft.phone}
-                onChange={(event) =>
-                  setCreateDraft((prev) => ({ ...prev, phone: event.target.value }))
-                }
+                onChange={(event) => setCreateDraft((prev) => ({ ...prev, phone: event.target.value }))}
                 className="mt-1 h-9 w-full rounded-md border border-slate-300 px-2 text-slate-900"
               />
             </div>
@@ -123,205 +106,115 @@ export function CustomersList() {
               disabled={creating || !createDraft.name.trim()}
               className="rounded-md bg-slate-900 px-3 py-2 text-xs font-semibold text-white disabled:opacity-60"
             >
-              {creating ? 'Salvando...' : 'Cadastrar'}
+              {creating ? 'Saving...' : 'Create'}
             </button>
             <button
               type="button"
-              onClick={cancelCreate}
+              onClick={() => setIsCreating(false)}
               className="rounded-md border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700"
             >
-              Cancelar
+              Cancel
             </button>
           </div>
         </div>
       )}
-      {items.length === 0 && (
-        <p className="text-sm text-slate-600">Nenhum cliente encontrado.</p>
-      )}
-      <div className="md:hidden space-y-3">
-        {items.map((customer) => {
-          const isEditing = customer.id === editingId
-          const isSaving = customer.id === savingId
 
-          return (
-            <div
-              key={customer.id}
-              className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm"
-            >
-              <div className="flex flex-col gap-3">
-                <div>
-                  <p className="text-xs font-semibold text-slate-500">Nome</p>
-                  {isEditing ? (
-                    <input
-                      type="text"
-                      value={draft.name}
-                      onChange={(event) =>
-                        setDraft((prev) => ({ ...prev, name: event.target.value }))
-                      }
-                      className="mt-1 h-9 w-full rounded-md border border-slate-300 px-2 text-slate-900"
-                    />
-                  ) : (
-                    <p className="text-sm font-medium text-slate-900">{customer.name}</p>
-                  )}
-                </div>
-                <div>
-                  <p className="text-xs font-semibold text-slate-500">Telefone</p>
-                  {isEditing ? (
-                    <input
-                      type="text"
-                      value={draft.phone}
-                      onChange={(event) =>
-                        setDraft((prev) => ({ ...prev, phone: event.target.value }))
-                      }
-                      className="mt-1 h-9 w-full rounded-md border border-slate-300 px-2 text-slate-900"
-                    />
-                  ) : (
-                    <p className="text-sm text-slate-700">{customer.phone || '-'}</p>
-                  )}
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {isEditing ? (
-                    <>
-                      <button
-                        type="button"
-                        onClick={saveEdit}
-                        disabled={isSaving}
-                        className="rounded-md bg-slate-900 px-3 py-2 text-xs font-semibold text-white disabled:opacity-60"
-                      >
-                        {isSaving ? 'Salvando...' : 'Salvar'}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={cancelEdit}
-                        className="rounded-md border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700"
-                      >
-                        Cancelar
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <Link
-                        href={`/customers/${customer.id}`}
-                        className="inline-flex items-center gap-2 rounded-md border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-blue-200 hover:text-blue-600"
-                        aria-label={`Ver detalhes de ${customer.name}`}
-                      >
-                        <Eye className="h-4 w-4" />
-                        Detalhes
-                      </Link>
-                      <button
-                        type="button"
-                        onClick={() => startEdit(customer.id)}
-                        className="inline-flex items-center gap-2 rounded-md border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-900"
-                        aria-label={`Editar ${customer.name}`}
-                      >
-                        <Pencil className="h-4 w-4" />
-                        Editar
-                      </button>
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-          )
-        })}
-      </div>
+      {loading ? (
+        <p className="text-slate-600">Loading customers...</p>
+      ) : (
+        <div className="hidden md:block overflow-x-auto">
+          <table className="w-full min-w-[640px] border border-slate-200 text-xs sm:text-sm">
+            <thead className="bg-slate-100 text-slate-700">
+              <tr>
+                <th className="px-3 py-2 text-left">Name</th>
+                <th className="px-3 py-2 text-left">Phone</th>
+                <th className="px-3 py-2 text-left">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {items.map((customer) => {
+                const isEditing = customer.id === editingId
+                const isSaving = customer.id === savingId
 
-      <div className="hidden md:block overflow-x-auto">
-        <table className="w-full min-w-[640px] border border-slate-200 text-xs sm:text-sm">
-          <thead className="bg-slate-100 text-slate-700">
-            <tr>
-              <th className="px-3 py-2 text-left">Nome</th>
-              <th className="px-3 py-2 text-left">Telefone</th>
-              <th className="px-3 py-2 text-left">Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {items.map((customer) => {
-              const isEditing = customer.id === editingId
-              const isSaving = customer.id === savingId
-
-              return (
-                <tr key={customer.id} className="border-t border-slate-200">
-                  <td className="px-3 py-2">
-                    {isEditing ? (
-                      <input
-                        type="text"
-                        value={draft.name}
-                        onChange={(event) =>
-                          setDraft((prev) => ({ ...prev, name: event.target.value }))
-                        }
-                        className="h-9 w-full rounded-md border border-slate-300 px-2 text-slate-900"
-                      />
-                    ) : (
-                      <span className="text-slate-900">{customer.name}</span>
-                    )}
-                  </td>
-                  <td className="px-3 py-2">
-                    {isEditing ? (
-                      <input
-                        type="text"
-                        value={draft.phone}
-                        onChange={(event) =>
-                          setDraft((prev) => ({ ...prev, phone: event.target.value }))
-                        }
-                        className="h-9 w-full rounded-md border border-slate-300 px-2 text-slate-900"
-                      />
-                    ) : (
-                      <span className="text-slate-700">{customer.phone || '-'}</span>
-                    )}
-                  </td>
-                  <td className="px-3 py-2 whitespace-nowrap">
-                    {isEditing ? (
-                      <div className="flex flex-wrap gap-2">
-                        <button
-                          type="button"
-                          onClick={saveEdit}
-                          disabled={isSaving}
-                          className="rounded-md bg-slate-900 px-3 py-2 text-xs font-semibold text-white disabled:opacity-60"
-                        >
-                          {isSaving ? 'Salvando...' : 'Salvar'}
-                        </button>
-                        <button
-                          type="button"
-                          onClick={cancelEdit}
-                          className="rounded-md border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700"
-                        >
-                          Cancelar
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="flex flex-wrap items-center gap-2">
-                        <Link
-                          href={`/customers/${customer.id}`}
-                          className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-slate-200 text-slate-700 transition hover:border-blue-200 hover:text-blue-600"
-                          aria-label={`Ver detalhes de ${customer.name}`}
-                        >
-                          <Eye className="h-4 w-4" />
-                        </Link>
-                        <button
-                          type="button"
-                          onClick={() => startEdit(customer.id)}
-                          className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-slate-200 text-slate-700 transition hover:border-slate-300 hover:text-slate-900"
-                          aria-label={`Editar ${customer.name}`}
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </button>
-                      </div>
-                    )}
+                return (
+                  <tr key={customer.id} className="border-t border-slate-200">
+                    <td className="px-3 py-2">
+                      {isEditing ? (
+                        <input
+                          type="text"
+                          value={draft.name}
+                          onChange={(event) => setDraft((prev) => ({ ...prev, name: event.target.value }))}
+                          className="h-9 w-full rounded-md border border-slate-300 px-2 text-slate-900"
+                        />
+                      ) : (
+                        <span className="text-slate-900">{customer.name}</span>
+                      )}
+                    </td>
+                    <td className="px-3 py-2">
+                      {isEditing ? (
+                        <input
+                          type="text"
+                          value={draft.phone}
+                          onChange={(event) => setDraft((prev) => ({ ...prev, phone: event.target.value }))}
+                          className="h-9 w-full rounded-md border border-slate-300 px-2 text-slate-900"
+                        />
+                      ) : (
+                        <span className="text-slate-700">{customer.phone || '-'}</span>
+                      )}
+                    </td>
+                    <td className="px-3 py-2 whitespace-nowrap">
+                      {isEditing ? (
+                        <div className="flex flex-wrap gap-2">
+                          <button
+                            type="button"
+                            onClick={saveEdit}
+                            disabled={isSaving}
+                            className="rounded-md bg-slate-900 px-3 py-2 text-xs font-semibold text-white disabled:opacity-60"
+                          >
+                            {isSaving ? 'Saving...' : 'Save'}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={cancelEdit}
+                            className="rounded-md border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex flex-wrap items-center gap-2">
+                          <Link
+                            href={`/customers/${customer.id}`}
+                            className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-slate-200 text-slate-700 transition hover:border-blue-200 hover:text-blue-600"
+                            aria-label={`View details for ${customer.name}`}
+                          >
+                            <Eye className="h-4 w-4" />
+                          </Link>
+                          <button
+                            type="button"
+                            onClick={() => startEdit(customer.id)}
+                            className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-slate-200 text-slate-700 transition hover:border-slate-300 hover:text-slate-900"
+                            aria-label={`Edit ${customer.name}`}
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </button>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                )
+              })}
+              {items.length === 0 && (
+                <tr>
+                  <td className="px-3 py-4 text-center text-slate-500" colSpan={3}>
+                    No customers found.
                   </td>
                 </tr>
-              )
-            })}
-            {items.length === 0 && (
-              <tr>
-                <td className="px-3 py-4 text-center text-slate-500" colSpan={3}>
-                  Nenhum cliente encontrado.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   )
 }

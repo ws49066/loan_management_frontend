@@ -16,7 +16,7 @@ export default async function CustomerLoanDetailsPage({
   const loanId = Number.isFinite(parsedId) ? parsedId : fallbackId
 
   if (!Number.isFinite(loanId)) {
-    return <p className="text-slate-600">Empréstimo inválido.</p>
+    return <p className="text-slate-600">Invalid loan.</p>
   }
 
   return (

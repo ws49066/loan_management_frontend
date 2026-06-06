@@ -19,7 +19,7 @@ const emptySummary: LoanSimulationProposalResult = loanSimulationProposalResultS
 })
 
 function formatCurrency(value: number) {
-  return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+  return value.toLocaleString('en-US', { style: 'currency', currency: 'BRL' })
 }
 
 function formatDate(value?: string | null) {
@@ -28,7 +28,7 @@ function formatDate(value?: string | null) {
   if (Number.isNaN(parsed.getTime())) {
     return value
   }
-  return parsed.toLocaleDateString('pt-BR')
+  return parsed.toLocaleDateString('en-US')
 }
 
 function normalizeNumber(value: unknown) {
@@ -99,7 +99,7 @@ export function LoanSimulationForm() {
           setSummary(data)
         })
         .catch((err) => {
-          const message = err instanceof Error ? err.message : 'Falha ao simular empréstimo'
+          const message = err instanceof Error ? err.message : 'Failed to simulate loan'
           setSimulationError(message)
           setSummary(null)
         })
@@ -124,20 +124,20 @@ export function LoanSimulationForm() {
       <form className="flex flex-col gap-5">
         <div className="grid gap-4 md:grid-cols-2">
           <label className="flex flex-col gap-2 text-sm text-slate-700">
-            Valor contratado *
+            Contracted Amount *
             <input
               type="number"
               step="0.01"
               min="0"
               {...register('amount', { valueAsNumber: true })}
               className="h-11 rounded-md border border-slate-300 px-3 text-slate-900 outline-none focus:border-slate-500"
-              placeholder="0,00"
+              placeholder="0.00"
             />
             {errors.amount && <span className="text-xs text-red-600">{errors.amount.message}</span>}
           </label>
 
           <label className="flex flex-col gap-2 text-sm text-slate-700">
-            Número de parcelas *
+            Installments *
             <input
               type="number"
               min="1"
@@ -151,7 +151,7 @@ export function LoanSimulationForm() {
           </label>
 
           <label className="flex flex-col gap-2 text-sm text-slate-700">
-            Taxa de juros (%) *
+            Interest Rate (%) *
             <input
               type="number"
               step="0.01"
@@ -166,7 +166,7 @@ export function LoanSimulationForm() {
           </label>
 
           <label className="flex flex-col gap-2 text-sm text-slate-700">
-            Primeira parcela *
+            First Due Date *
             <input
               type="date"
               {...register('first_due_date')}
@@ -178,7 +178,7 @@ export function LoanSimulationForm() {
           </label>
 
           <label className="flex flex-col gap-2 text-sm text-slate-700 md:col-span-2">
-            Valor da parcela (opcional - deixe vazio para cálculo automático)
+            Installment Amount (optional - leave empty for automatic calculation)
             <input
               type="number"
               step="0.01"
@@ -187,7 +187,7 @@ export function LoanSimulationForm() {
                 setValueAs: (value) => (value === '' ? undefined : Number(value)),
               })}
               className="h-11 rounded-md border border-slate-300 px-3 text-slate-900 outline-none focus:border-slate-500"
-              placeholder="Calculado automaticamente"
+              placeholder="Automatically calculated"
             />
             {errors.installment_value && (
               <span className="text-xs text-red-600">{errors.installment_value.message}</span>
@@ -197,8 +197,8 @@ export function LoanSimulationForm() {
 
         <div className="rounded-md border border-blue-100 bg-blue-50 p-5">
           <div className="flex items-center justify-between">
-            <div className="text-sm font-semibold text-slate-800">Resumo da proposta</div>
-            {simulating && <span className="text-xs text-slate-500">Simulando...</span>}
+            <div className="text-sm font-semibold text-slate-800">Proposal Summary</div>
+            {simulating && <span className="text-xs text-slate-500">Simulating...</span>}
           </div>
           {displayError && <p className="mt-2 text-xs text-red-600">{displayError}</p>}
 
@@ -206,12 +206,12 @@ export function LoanSimulationForm() {
             <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
               <Image src="/images/Logo.png" alt="Logo" width={150} height={40} />
               <div className="text-xs font-semibold uppercase tracking-wide text-slate-700">
-                Proposta de empréstimo
+                Loan Proposal
               </div>
             </div>
 
             <div className="border-b border-slate-200 px-4 py-4">
-              <div className="text-xs font-medium uppercase text-slate-500">Valor contratado</div>
+              <div className="text-xs font-medium uppercase text-slate-500">Contracted Amount</div>
               <div className="mt-2 text-2xl font-semibold text-slate-900">
                 {formatCurrency(displaySummary.valor_contratado)}
               </div>
@@ -219,13 +219,13 @@ export function LoanSimulationForm() {
 
             <div className="divide-y divide-slate-200 text-sm text-slate-700">
               <div className="flex items-center justify-between px-4 py-3">
-                <span>Total de parcelas</span>
+                <span>Total Installments</span>
                 <span className="font-semibold text-slate-900">
                   {displaySummary.quantidade_parcelas ?? installmentsValue}x
                 </span>
               </div>
               <div className="flex items-center justify-between px-4 py-3">
-                <span>Primeira parcela</span>
+                <span>First Installment</span>
                 <div className="text-right">
                   <div className="font-semibold text-slate-900">
                     {formatCurrency(displaySummary.valor_primeira_parcela)}
@@ -237,7 +237,7 @@ export function LoanSimulationForm() {
               </div>
               {showLastInstallment ? (
                 <div className="flex items-center justify-between px-4 py-3">
-                  <span>Última parcela</span>
+                  <span>Last Installment</span>
                   <div className="text-right">
                     <div className="font-semibold text-slate-900">
                       {formatCurrency(lastInstallmentValue)}

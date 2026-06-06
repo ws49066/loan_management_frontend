@@ -23,7 +23,7 @@ export async function simulateLoanProposal(
       payload,
     )
     if (data && typeof data === 'object' && 'success' in data && data.success === false) {
-      throw new Error(data.message || 'Falha ao simular proposta')
+      throw new Error(data.message || 'Failed to simulate proposal')
     }
     const payloadData = data && typeof data === 'object' && 'data' in data ? data.data : data
     return loanSimulationProposalResultSchema.parse(payloadData ?? {})

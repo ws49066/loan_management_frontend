@@ -26,7 +26,7 @@ export const useLoansStore = create<LoansState>((set, get) => ({
       const items = await fetchLoans()
       set({ items })
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Falha ao carregar empréstimos'
+      const message = err instanceof Error ? err.message : 'Failed to load loans'
       set({ error: message })
     } finally {
       set({ loading: false })
@@ -39,7 +39,7 @@ export const useLoansStore = create<LoansState>((set, get) => ({
       await get().load()
       return true
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Falha ao criar empréstimo'
+      const message = err instanceof Error ? err.message : 'Failed to create loan'
       set({ error: message })
       return false
     } finally {

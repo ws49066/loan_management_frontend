@@ -12,12 +12,12 @@ export default function LoansPage() {
           href="/loans/new"
           className="inline-flex h-11 items-center justify-center rounded-md bg-blue-600 px-4 text-sm font-semibold text-white transition hover:bg-blue-700"
         >
-          Novo Empréstimo
+          New Loan
         </Link>
       </header>
 
       <section className="mt-6 rounded-md bg-white p-4 shadow-sm">
-        <h3 className="text-lg font-semibold text-slate-900">Lista de empréstimos</h3>
+        <h3 className="text-lg font-semibold text-slate-900">Loan List</h3>
         <div className="mt-3">
           <LoanCreatedBanner />
         </div>

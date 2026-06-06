@@ -21,7 +21,7 @@ export const useDashboardStore = create<DashboardState>((set) => ({
       const summary = await fetchDashboardSummary()
       set({ summary })
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Falha ao carregar resumo'
+      const message = err instanceof Error ? err.message : 'Failed to load dashboard summary'
       set({ error: message })
     } finally {
       set({ loading: false })

@@ -13,22 +13,22 @@ import { useState } from 'react'
 
 
 const navItems = [
-  { label: 'Painel Principal', description: "Resumo do negócio com indicadores, alertas e pendências.", href: '/dashboard', Icon: LayoutDashboard },
-  { label: 'Clientes', description: "Cadastro e gestão completa dos clientes da carteira.", href: '/customers', Icon: Users },
-  { label: 'Empréstimos', description: "Controle de contratos, parcelas, juros e histórico.", href: '/loans', Icon: HandCoins },
-  { label: 'Simular empréstimo', description: "Simule valores e prazos para compartilhar com o cliente.", href: '/loans/simulate', Icon: Calculator },
-  { label: 'Vencimentos', description: "Calendário de cobranças, atrasos e próximos vencimentos.", href: '/due', Icon: CalendarClock },
-  { label: 'Usuários', description: "Gestão de acessos, permissões e perfis administrativos.", href: '/users', Icon: User, adminOnly: true },
+  { label: 'Dashboard', description: "Business overview with alerts and pending items.", href: '/dashboard', Icon: LayoutDashboard },
+  { label: 'Customers', description: "Full client registry and portfolio management.", href: '/customers', Icon: Users },
+  { label: 'Loans', description: "Contract, installment, interest and history management.", href: '/loans', Icon: HandCoins },
+  { label: 'Loan Simulation', description: "Simulate amounts and terms for clients.", href: '/loans/simulate', Icon: Calculator },
+  { label: 'Due Dates', description: "Billing calendar, late payments and upcoming due dates.", href: '/due', Icon: CalendarClock },
+  { label: 'Users', description: "Manage access, permissions and admin profiles.", href: '/users', Icon: User, adminOnly: true },
 ]
 
 const pageMetaByPath: Record<string, { label: string; description?: string }> = {
   '/loans/new': {
-    label: 'Novo empréstimo',
-    description: 'Preencha os dados para registrar um novo empréstimo.',
+    label: 'New Loan',
+    description: 'Fill in the details to register a new loan.',
   },
   '/loans/simulate': {
-    label: 'Simular empréstimo',
-    description: 'Monte uma simulação rápida para compartilhar com o cliente.',
+    label: 'Loan Simulation',
+    description: 'Build a quick simulation to share with the client.',
   },
 }
 
@@ -103,7 +103,7 @@ export default function PrivateLayout({
           <div className="border-t border-slate-200 px-4 py-4">
             <div className="text-xs font-semibold text-slate-500">Logado como</div>
             <div className="mt-1 text-sm font-medium text-slate-900">
-              {user?.name || user?.email || 'Sem nome'}
+              {user?.name || user?.email || 'No Name'}
               {user?.role ? (
                 <span className="ml-2 text-xs font-semibold text-slate-500">
                   ({user.role})
@@ -115,7 +115,7 @@ export default function PrivateLayout({
               onClick={handleLogout}
               className="mt-3 w-full rounded-md border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-red-200 hover:bg-red-50 hover:text-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-200"
             >
-              Sair
+              Logout
             </button>
           </div>
         </aside>
@@ -135,7 +135,7 @@ export default function PrivateLayout({
               type="button"
               onClick={() => setMobileNavOpen(true)}
               className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-slate-200 text-slate-600 transition hover:bg-slate-50 md:hidden"
-              aria-label="Abrir menu"
+              aria-label="Open menu"
             >
               <Menu className="h-5 w-5" />
             </button>

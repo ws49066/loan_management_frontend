@@ -29,7 +29,7 @@ export const useCustomersStore = create<CustomersState>((set) => ({
       const { items, total } = await fetchCustomers()
       set({ items, total })
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Falha ao carregar clientes'
+      const message = err instanceof Error ? err.message : 'Failed to load customers'
       set({ error: message })
     } finally {
       set({ loading: false })
@@ -45,7 +45,7 @@ export const useCustomersStore = create<CustomersState>((set) => ({
       }))
       return true
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Falha ao cadastrar cliente'
+      const message = err instanceof Error ? err.message : 'Failed to create customer'
       set({ error: message })
       return false
     } finally {
@@ -63,7 +63,7 @@ export const useCustomersStore = create<CustomersState>((set) => ({
       }))
       return true
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Falha ao atualizar cliente'
+      const message = err instanceof Error ? err.message : 'Failed to update customer'
       set({ error: message })
       return false
     } finally {

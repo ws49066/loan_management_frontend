@@ -44,7 +44,7 @@ export const useUsersStore = create<UsersState>((set) => ({
       const { items, total } = await fetchUsers(params)
       set({ items, total })
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Falha ao carregar usuários'
+      const message = err instanceof Error ? err.message : 'Failed to load users'
       set({ error: message })
     } finally {
       set({ loading: false })
@@ -60,7 +60,7 @@ export const useUsersStore = create<UsersState>((set) => ({
       }))
       return true
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Falha ao cadastrar usuário'
+      const message = err instanceof Error ? err.message : 'Failed to create user'
       set({ error: message })
       return false
     } finally {
@@ -79,7 +79,7 @@ export const useUsersStore = create<UsersState>((set) => ({
       }))
       return true
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Falha ao atualizar usuário'
+      const message = err instanceof Error ? err.message : 'Failed to update user'
       set({ error: message })
       return false
     } finally {

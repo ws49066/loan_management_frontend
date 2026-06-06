@@ -108,7 +108,7 @@ export const useInstallmentsDueStore = create<InstallmentsDueState>((set, get) =
         size: data.size,
       })
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Falha ao carregar vencimentos'
+      const message = err instanceof Error ? err.message : 'Failed to load installments due'
       set({ error: message })
     } finally {
       set({ loading: false })

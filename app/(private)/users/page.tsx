@@ -16,11 +16,11 @@ export default function UsersPage() {
   }, [user, router])
 
   if (!user) {
-    return <p className="text-slate-600">Carregando usuários...</p>
+    return <p className="text-slate-600">Loading users...</p>
   }
 
   if (user.role !== 'ADMIN') {
-    return <p className="text-slate-600">Você não tem permissão para acessar.</p>
+    return <p className="text-slate-600">You do not have permission to access this page.</p>
   }
 
   return (
