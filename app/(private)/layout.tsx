@@ -101,7 +101,6 @@ export default function PrivateLayout({
             })}
           </nav>
           <div className="border-t border-slate-200 px-4 py-4">
-            <div className="text-xs font-semibold text-slate-500">Logado como</div>
             <div className="mt-1 text-sm font-medium text-slate-900">
               {user?.name || user?.email || 'No Name'}
               {user?.role ? (
