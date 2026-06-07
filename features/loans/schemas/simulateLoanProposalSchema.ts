@@ -31,15 +31,15 @@ const optionalNumber = z.preprocess((value) => {
 }, z.number())
 
 export const loanSimulationProposalResultSchema = z.object({
-  valor_contratado: z.coerce.number(),
-  total_com_juros: optionalNumber.optional(),
-  total_juros: optionalNumber.optional(),
-  taxa_juros: optionalNumber.optional(),
-  quantidade_parcelas: optionalNumber.optional(),
-  valor_primeira_parcela: z.coerce.number(),
-  data_primeira_parcela: z.string(),
-  valor_ultima_parcela: optionalNumber.optional().nullable(),
-  data_ultima_parcela: z.string().optional().nullable(),
+  contracted_amount: z.coerce.number(),
+  total_with_interest: optionalNumber.optional(),
+  total_interest: optionalNumber.optional(),
+  interest_rate: optionalNumber.optional(),
+  installments_count: optionalNumber.optional(),
+  first_installment_value: z.coerce.number(),
+  first_installment_date: z.string(),
+  last_installment_value: optionalNumber.optional().nullable(),
+  last_installment_date: z.string().optional().nullable(),
 })
 
 export type LoanSimulationProposalResult = z.infer<typeof loanSimulationProposalResultSchema>
