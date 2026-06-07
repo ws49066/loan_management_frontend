@@ -91,7 +91,3 @@ Tell me if you want me to automatically apply these translations.
 ## Adding This Project to Your Portfolio
 
 If you want a short portfolio blurb and screenshot suggestions, I can prepare a concise description and a step-by-step demo script you can use when presenting the project.
-
-## License
-
-This repository is currently private. Change this section if you open-source the project.
