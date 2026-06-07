@@ -55,7 +55,7 @@ export async function fetchInstallmentsDue({
         clientName: item.client_name,
         clientPhone: item.client_phone,
         installmentLabel: item.installment_label,
-        installmentNumber: item.installment_number,
+        installmentNumber: item.number,
         totalInstallments: item.total_installments,
         dueDate: item.due_date,
         amount: item.amount,
