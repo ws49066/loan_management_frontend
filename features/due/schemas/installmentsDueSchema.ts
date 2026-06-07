@@ -6,15 +6,15 @@ const installmentDueItemSchema = z.object({
   client_id: z.number(),
   client_name: z.string(),
   client_phone: z.string().nullable().optional(),
-  parcela: z.string(),
-  numero: z.number(),
-  total_parcelas: z.number(),
-  vencimento: z.string(),
-  valor: z.coerce.number(),
+  installment_label: z.string(),
+  number: z.number(),
+  total_installments: z.number(),
+  due_date: z.string(),
+  amount: z.coerce.number(),
   status: z.enum(['PENDING', 'LATE', 'PAID']),
-  informacao: z.string().nullable().optional(),
-  dias_atraso: z.number().nullable().optional(),
-  pagamento: z.string().nullable().optional(),
+  info: z.string().nullable().optional(),
+  days_late: z.number().nullable().optional(),
+  payment_date: z.string().nullable().optional(),
 })
 
 export const installmentsDueSchema = z.object({

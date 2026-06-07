@@ -63,7 +63,7 @@ export function LoginForm() {
         </label>
 
         <label className="flex flex-col gap-2 text-sm text-slate-700">
-          Senha de acesso
+          Password
           <input
             type="password"
             {...register('password')}

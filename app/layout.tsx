@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "TechCred",
-  description: "Gerenciado de Emprestimo",
+  description: "Loan Management System for TechCred",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,

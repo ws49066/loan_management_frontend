@@ -3,17 +3,17 @@ import { z } from 'zod'
 export const customerSummaryHistorySchema = z.object({
   id: z.number().optional(),
   loan_id: z.number().optional(),
-  valor: z.number(),
-  total_com_juros: z.number(),
-  total_juros: z.number(),
-  taxa_juros: z.number(),
-  total_pago: z.number(),
-  total_pendente: z.number(),
-  quantidade_parcelas: z.number(),
-  parcelas_pagas: z.number(),
-  progresso: z.number(),
+  amount: z.number(),
+  total_with_interest: z.number(),
+  total_interest: z.number(),
+  interest_rate: z.number(),
+  total_paid: z.number(),
+  total_pending: z.number(),
+  installments_count: z.number(),
+  installments_paid: z.number(),
+  progress: z.number(),
   status: z.string(),
-  primeiro_vencimento: z.string(),
+  first_due_date: z.string(),
 })
 
 export const customerSummarySchema = z.object({
@@ -22,12 +22,12 @@ export const customerSummarySchema = z.object({
     name: z.string(),
     phone: z.string().nullable().optional(),
   }),
-  total_emprestado: z.number(),
-  total_a_receber: z.number(),
-  total_recebido: z.number(),
-  emprestimos_total: z.number(),
-  emprestimos_ativos: z.number(),
-  historico: z.array(customerSummaryHistorySchema),
+  total_loaned: z.number(),
+  total_to_receive: z.number(),
+  total_received: z.number(),
+  loans_total: z.number(),
+  loans_active: z.number(),
+  history: z.array(customerSummaryHistorySchema),
 })
 
 export type CustomerSummarySchema = z.infer<typeof customerSummarySchema>

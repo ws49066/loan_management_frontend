@@ -13,9 +13,9 @@ import {
 import { simulateLoanProposal } from '../services/simulateLoanProposalService'
 
 const emptySummary: LoanSimulationProposalResult = loanSimulationProposalResultSchema.parse({
-  valor_contratado: 0,
-  valor_primeira_parcela: 0,
-  data_primeira_parcela: '',
+  contracted_amount: 0,
+  first_installment_value: 0,
+  first_installment_date: '',
 })
 
 function formatCurrency(value: number) {
@@ -115,9 +115,9 @@ export function LoanSimulationForm() {
   const displayError = canSimulate ? simulationError : null
   const showLastInstallment = installmentsValue > 1
   const lastInstallmentValue =
-    displaySummary.valor_ultima_parcela ?? displaySummary.valor_primeira_parcela
+    displaySummary.last_installment_value ?? displaySummary.first_installment_value
   const lastInstallmentDate =
-    displaySummary.data_ultima_parcela ?? displaySummary.data_primeira_parcela
+    displaySummary.last_installment_date ?? displaySummary.first_installment_date
 
   return (
     <div className="flex flex-col gap-6">
@@ -213,7 +213,7 @@ export function LoanSimulationForm() {
             <div className="border-b border-slate-200 px-4 py-4">
               <div className="text-xs font-medium uppercase text-slate-500">Contracted Amount</div>
               <div className="mt-2 text-2xl font-semibold text-slate-900">
-                {formatCurrency(displaySummary.valor_contratado)}
+                {formatCurrency(displaySummary.contracted_amount)}
               </div>
             </div>
 
@@ -221,17 +221,17 @@ export function LoanSimulationForm() {
               <div className="flex items-center justify-between px-4 py-3">
                 <span>Total Installments</span>
                 <span className="font-semibold text-slate-900">
-                  {displaySummary.quantidade_parcelas ?? installmentsValue}x
+                  {displaySummary.installments_count ?? installmentsValue}x
                 </span>
               </div>
               <div className="flex items-center justify-between px-4 py-3">
                 <span>First Installment</span>
                 <div className="text-right">
                   <div className="font-semibold text-slate-900">
-                    {formatCurrency(displaySummary.valor_primeira_parcela)}
+                    {formatCurrency(displaySummary.first_installment_value)}
                   </div>
                   <div className="text-xs text-slate-500">
-                    {formatDate(displaySummary.data_primeira_parcela)}
+                    {formatDate(displaySummary.first_installment_date)}
                   </div>
                 </div>
               </div>

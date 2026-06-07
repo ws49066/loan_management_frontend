@@ -16,7 +16,7 @@ export function LoanCreatedBanner() {
 
   return (
     <div className="flex items-start justify-between gap-3 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
-      <span>Emprestimo criado com sucesso.</span>
+      <span>Loan created successfully.</span>
       <button
         type="button"
         onClick={() => setDismissed(true)}
